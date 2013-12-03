@@ -22680,7 +22680,7 @@ var data = {
 };
 
 app.controller('demoCtrl', function($scope) {
-
+  this.events = data.events;
 });
 
 app.run(function() {
