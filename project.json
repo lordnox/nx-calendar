@@ -35,11 +35,6 @@
     "styles": [
       "app/styles/reset.css",
       "app/styles/app.css"
-    ],
-    "old styles": [
-      "bower_components/components-font-awesome/css/font-awesome.css",
-      "bower_components/bootstrap.css/css/bootstrap.css"
     ]
   }
-
 }

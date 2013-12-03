@@ -36,8 +36,6 @@ addFiles(jsFiles, project.files.app, project.apppath);
 // add styles
 addFiles(cssFiles, project.files.styles);
 
-console.log(project, jsFiles, cssFiles);
-
 module.exports = function(grunt) {
 
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
@@ -105,7 +103,8 @@ module.exports = function(grunt) {
             cwd: project.appbase,
             src: [
               '**',
-              '!' + Path.join(project.assetspath, '**')
+              '!' + Path.join(project.assetspath, '**'),
+              '**/*.html'
             ],
             dest: Path.join(project.buildpath, project.client),
           },
