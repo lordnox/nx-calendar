@@ -22584,21 +22584,22 @@ angular.module('Scope.safeApply', []).run(function($rootScope) {
     };
   })
 ;
-;var app = angular.module('app', [
+;var app = angular.module('nx-calendar-demo', [
   'ui.router',
-  'configuration'
+  'configuration',
+  'nx-calendar'
 ])
 
-  .config(function ($stateProvider, configProvider) {
+  .config(function ($stateProvider, configProvider, nxCalendarConfigurationProvider) {
 
-    var template = configProvider.template('app');
+    var template = configProvider.template('nx-calendar-demo');
 
     /**
      *    Define an abstract state that itself defines the navigation element and a container for the
      *    sub-states
      **/
     $stateProvider
-      .state('app', {
+      .state('calendar', {
         abstract: true,
         views: {
           '@': {
@@ -22609,25 +22610,83 @@ angular.module('Scope.safeApply', []).run(function($rootScope) {
           }
         }
       })
-      .state('app.home', {
-        url: '/index.html',
-        templateUrl: template('index')
+      .state('calendar.month', {
+        url: '/',
+        templateUrl: template('month')
       })
-      .state('app.about', {
-        url: '/about.html',
-        templateUrl: template('about')
+      .state('calendar.week', {
+        url: '/',
+        templateUrl: template('week')
+      })
+      .state('calendar.day', {
+        url: '/',
+        templateUrl: template('day')
+      })
+      .state('calendar.events', {
+        url: '/',
+        templateUrl: template('events')
+      })
+      .state('calendar.settings', {
+        url: '/',
+        templateUrl: template('settings')
       })
   })
 
 ;
 
 
+;var app = angular.module('nx-calendar', [])
+  .provider('nxCalendarConfiguration', function() {
+    var config = {
+
+      path        : ['scripts', 'modules']
+    , directory   : 'templates'
+    , suffix      : '.html'
+    , module      : 'nx-calendar'
+
+    , template: function(path) {
+        return config.path.concat([config.module, config.directory])
+                          .concat(Array.prototype.slice.call(arguments))
+                          .join('/') + config.suffix;
+      }
+    };
+
+    return {
+      $get: function() {
+        return config;
+      },
+      template: config.template,
+      set: function(key, value) {
+        config[key] = value;
+      },
+      config: config
+    };
+  })
 ;
+
+;
+
+
+;
+var app = angular.module('nx-calendar');
+
+var data = {
+
+};
+
+app.controller('demoCtrl', function($scope) {
+
+});
+
+app.run(function() {
+  data.events = [];
+});;
 var module = angular.module('application', [
     'ui.router',
     'configuration',
     'Scope.safeApply',
-    'app',
+    'nx-calendar',
+    'nx-calendar-demo',
   ])
 
   .config(function($locationProvider, $urlRouterProvider, configProvider) {
@@ -22653,8 +22712,6 @@ var module = angular.module('application', [
   })
 
   .controller('appCtrl', function($scope) {
-    $scope.home = 'Hello World!';
-
     $scope.title = 'Raynode - Tobias Kopelke';
   })
 
