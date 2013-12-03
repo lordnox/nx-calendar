@@ -34,7 +34,7 @@ module.exports = function() {
     basePath: '../',
     frameworks: ['mocha'],
     reporters: ['progress'],
-    browsers: ['PhantomJS', 'Chrome'],
+    browsers: ['PhantomJS'],
     autoWatch: true,
 
     // these are default values anyway

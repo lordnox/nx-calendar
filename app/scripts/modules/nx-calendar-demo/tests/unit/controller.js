@@ -21,10 +21,10 @@ describe("Unit: Testing Controllers", function() {
     return $controller(ctrl, mock);
   };
 
-  beforeEach(angular.mock.module('app'));
+  beforeEach(angular.mock.module('nx-calendar-demo'));
 
   beforeEach(function() {
-    module = angular.module('app');
+    module = angular.module('nx-calendar-demo');
   });
 
   /* IMPORTANT!
@@ -35,5 +35,9 @@ describe("Unit: Testing Controllers", function() {
     $rootScope = _$rootScope_;
     $controller = _$controller_;
   }));
+
+  it("should find the demoCtrl", function() {
+    controller('demoCtrl').should.exist;
+  });
 
 });

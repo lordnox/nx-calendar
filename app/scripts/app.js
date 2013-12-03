@@ -10,6 +10,9 @@ var module = angular.module('application', [
   .config(function($locationProvider, $urlRouterProvider, configProvider) {
     var config = configProvider.config;
 
+    config.routing.html5Mode = false; // needs to work everywhere
+    config.routing.default = "/month";
+
     // Default route:
     $urlRouterProvider.otherwise(config.routing.default);
 
@@ -17,6 +20,7 @@ var module = angular.module('application', [
       $locationProvider.html5Mode(true);
     }
     else {
+      $locationProvider.html5Mode(false);
       var routingPrefix = config.routing.prefix;
       if(routingPrefix && routingPrefix.length > 0) {
         $locationProvider.hashPrefix(routingPrefix);

@@ -17,7 +17,5 @@ module.exports = function(config) {
   // dann testing bibliotheken
   // dann dateien
 
-  console.log(sharedConfig.project);
-
   config.set(conf);
 };

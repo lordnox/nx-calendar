@@ -25,24 +25,29 @@ var app = angular.module('nx-calendar-demo', [
         }
       })
       .state('calendar.month', {
-        url: '/',
-        templateUrl: template('month')
+        url: '/month',
+        templateUrl: template('month'),
+        controller: 'demoCtrl'
       })
       .state('calendar.week', {
-        url: '/',
-        templateUrl: template('week')
+        url: '/week',
+        templateUrl: template('week'),
+        controller: 'demoCtrl'
       })
       .state('calendar.day', {
-        url: '/',
-        templateUrl: template('day')
+        url: '/day',
+        templateUrl: template('day'),
+        controller: 'demoCtrl'
       })
       .state('calendar.events', {
-        url: '/',
-        templateUrl: template('events')
+        url: '/events',
+        templateUrl: template('events'),
+        controller: 'demoCtrl'
       })
       .state('calendar.settings', {
-        url: '/',
-        templateUrl: template('settings')
+        url: '/settings',
+        templateUrl: template('settings'),
+        controller: 'demoCtrl'
       })
   })
 
