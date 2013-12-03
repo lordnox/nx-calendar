@@ -1,8 +1,8 @@
 {
   "server": {
-    "devPort": 8008,
-    "coveragePort": 5555,
-    "testPort": 9999
+    "devPort": 8080,
+    "coveragePort": 5556,
+    "testPort": 9998
   },
   "bowerpath": "bower_components",
   "buildpath": "build/",

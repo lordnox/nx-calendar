@@ -3,7 +3,8 @@ var module = angular.module('application', [
     'ui.router',
     'configuration',
     'Scope.safeApply',
-    'app',
+    'nx-calendar',
+    'nx-calendar-demo',
   ])
 
   .config(function($locationProvider, $urlRouterProvider, configProvider) {
@@ -29,8 +30,6 @@ var module = angular.module('application', [
   })
 
   .controller('appCtrl', function($scope) {
-    $scope.home = 'Hello World!';
-
     $scope.title = 'Raynode - Tobias Kopelke';
   })
 

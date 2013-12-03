@@ -16,68 +16,8 @@
   <body class="background-dark landing">
     <div id="page">
       <div id="nav" ui-view="navigation">
-        <div class="container">
-          <header class="page-header">
-            <div class="navbar">
-              <div class="logo pull-left">
-                <h4><a href="/">Ray<strong>node</strong></a> <small>Tobias <i>Nox</i> Kopelke</small></h4>
-              </div>
-              <ul class="nav navbar-nav pull-right navbar-menu">
-                <li class="active" ng-class="{ active: $state.includes('app.home') }">
-                  <a ui-sref="app.home">Home</a>
-                </li>
-                <li ng-class="{ active: $state.includes('app.about') }">
-                  <a ui-sref="app.about">About</a>
-                </li>
-              </ul>
-            </div>
-          </header>
-        </div>
       </div>
       <div id="main" ui-view>
-        <div class="content">
-          <div class="widget widget-black">
-            <div class="container">
-              <div class="row">
-                <div class="col-sm-offset-1 col-sm-10 projects">
-                  <h2><strong>Projects</strong></h2>
-
-                  <section class="project">
-                    <div class="row">
-                      <div class="col-xs-3">
-                        <p>
-                          <span class="icon background-danger">
-                            <i class="fa fa-code-fork"></i>
-                          </span>
-                        </p>
-                      </div>
-                      <div class="col-xs-9">
-                        <h4><small>Open Source</small> <a href="https://github.com/lordnox/nx-calendar">Angular Calendar Directive</a></h4>
-                        <p>
-                          Currently in the works, a complete rewrite and overhaul of <a href="https://github.com/lordnox/angularjs-calendar">angularjs-calendar</a>. The project is dead since I did not contributed anymore. I plan to breath life into it as soon as I find the time.
-                        </p>
-                        <p>
-                          The project consists of a few directives and a calendar service. Surely I will need to include a connector to recieve google-calendar eventlists. The current work will be visible as a demo on this page. If you need to play around with the base of this project, you can find it <a href="http://embed.plnkr.co/7FhBFN">here</a>.
-                        </p>
-                        <div class="features">
-                          <h3>Features</h3>
-                          <ul>
-                            <li>Workable without service to view your google calendar. (Requires google account)</li>
-                            <li>Simple configurable service for angular.js.</li>
-                            <li>Customizable templates</li>
-                            <li>Year, Month, Day and Eventlist view</li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </section>
-
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
     <div id="footer">
