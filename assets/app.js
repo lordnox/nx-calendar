@@ -22612,23 +22612,28 @@ angular.module('Scope.safeApply', []).run(function($rootScope) {
       })
       .state('calendar.month', {
         url: '/month',
-        templateUrl: template('month')
+        templateUrl: template('month'),
+        controller: 'demoCtrl'
       })
       .state('calendar.week', {
         url: '/week',
-        templateUrl: template('week')
+        templateUrl: template('week'),
+        controller: 'demoCtrl'
       })
       .state('calendar.day', {
         url: '/day',
-        templateUrl: template('day')
+        templateUrl: template('day'),
+        controller: 'demoCtrl'
       })
       .state('calendar.events', {
         url: '/events',
-        templateUrl: template('events')
+        templateUrl: template('events'),
+        controller: 'demoCtrl'
       })
       .state('calendar.settings', {
         url: '/settings',
-        templateUrl: template('settings')
+        templateUrl: template('settings'),
+        controller: 'demoCtrl'
       })
   })
 
