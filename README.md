@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 AngularJS based webapp repository [![Build Status](https://travis-ci.org/lordnox/nx-builder.png?branch=master)](https://travis-ci.org/lordnox/nx-builder)
 =================================
 
@@ -50,3 +51,9 @@ ToDo:
 
 Based on work for [KSS services/solutions](http://www.kss-online.com/)
 >>>>>>> c80511a5b261aefd204db961d3f9e5ee84a562a6
+=======
+nx-calendar
+===========
+
+AngularJS extensive calendar directive
+>>>>>>> 4443c770060e532059afb1ab134c78d23fafe391
