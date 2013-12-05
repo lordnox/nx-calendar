@@ -6,7 +6,7 @@ var project = require('./project')
 
 var base = '';
 
-var jsFiles = [], cssFiles = [];
+var jsFiles = [], cssFiles = [], tplFiles = [];
 
 //@TODO: Read the bower.dependencies and generate the include list
 
@@ -36,7 +36,11 @@ addFiles(jsFiles, project.files.app, project.apppath);
 // add styles
 addFiles(cssFiles, project.files.styles);
 
+addFiles(tplFiles, project.files.templates);
+
 module.exports = function(grunt) {
+
+//  console.log(Object.keys(grunt));
 
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
@@ -48,6 +52,12 @@ module.exports = function(grunt) {
   // grunt.loadNpmTasks('grunt-karma');
 
   grunt.initConfig({
+    build: {
+      templates: {
+        files: tplFiles
+      }
+    },
+
     concat: {
       styles: {
         dest: './app/assets/app.css',
@@ -59,6 +69,10 @@ module.exports = function(grunt) {
         },
         dest: './app/assets/app.js',
         src: jsFiles
+      },
+      templates: {
+        dest: project.templatesPath + '/templates.js',
+        src: project.templatesPath + '/template_*.js'
       }
     },
 
@@ -93,6 +107,7 @@ module.exports = function(grunt) {
 
     clean: {
       build: project.buildpath,
+      templates: project.templatesPath
     },
 
     copy: {
@@ -173,7 +188,7 @@ module.exports = function(grunt) {
     watch: {
       assets: {
         files: ['app/styles/**/*.css','app/scripts/**'],
-        tasks: ['concat']
+        tasks: ['module-templates', 'concat']
       }
     }
   });
@@ -185,7 +200,7 @@ module.exports = function(grunt) {
 
   //keeping these around for legacy use
   grunt.registerTask('autotest',        ['autotest:unit']);
-  grunt.registerTask('autotest:unit',   ['connect:testserver','karma:unit_auto']);
+  grunt.registerTask('autotest:unit',   ['module-templates', 'connect:testserver','karma:unit_auto']);
   grunt.registerTask('autotest:midway', ['connect:testserver','karma:midway_auto']);
   grunt.registerTask('autotest:e2e',    ['connect:testserver','karma:e2e_auto']);
 
@@ -206,4 +221,28 @@ module.exports = function(grunt) {
 
   //server daemon
   grunt.registerTask('serve',     ['connect:webserver']);
+
+  grunt.registerTask("module-templates", "Create templates for all modules seperately", function() {
+    // read the current config
+    var ngtemplates = grunt.config.get('ngtemplates') || {};
+
+    // read all subdirectories from your modules folder
+    grunt.file.expand(project.apppath + "/modules/*").forEach(function (dir) {
+      // get the module name
+      var module = Path.basename(dir);
+
+      // define a new ngtemplates definition to copy all templates into the test directory
+      ngtemplates[module] = {
+        cwd:      project.appbase,
+        src:      ['**/' + module + '/**/*.html'],
+        dest:     project.templatesPath + '/template_' + module + '.js',
+      };
+    });
+    // set the "better" config
+    grunt.config.set('ngtemplates', ngtemplates);
+
+    // when finished run the concatinations
+    grunt.task.run(['ngtemplates', 'concat:templates']);
+  });
+
 };

@@ -22673,57 +22673,79 @@ angular.module('Scope.safeApply', []).run(function($rootScope) {
 
 
 ;
-var app = angular.module('nx-calendar');
+var app = angular.module('nx-calendar-demo');
 
-var data = {
-
-};
-
-app.controller('demoCtrl', function($scope) {
-
-});
+var data = {};
 
 app.run(function() {
-  data.events = [];
-});;
-var module = angular.module('application', [
-    'ui.router',
-    'configuration',
-    'Scope.safeApply',
-    'nx-calendar',
-    'nx-calendar-demo',
-  ])
+  var date = new Date();
+  var d = date.getDate();
+  var m = date.getMonth();
+  var y = date.getFullYear();
+  /* event source that pulls from google.com */
+  data.eventSource = {
+          url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic",
+          className: 'gcal-event',           // an option!
+          currentTimezone: 'America/Chicago' // an option!
+  };
+  /* event source that contains custom events on the scope */
+  data.events = [
+    {title: 'All Day Event',start: new Date(y, m, 1)},
+    {title: 'Long Event',start: new Date(y, m, d - 5),end: new Date(y, m, d - 2)},
+    {id: 999,title: 'Repeating Event',start: new Date(y, m, d - 3, 16, 0),allDay: false},
+    {id: 999,title: 'Repeating Event',start: new Date(y, m, d + 4, 16, 0),allDay: false},
+    {title: 'Birthday Party',start: new Date(y, m, d + 1, 19, 0),end: new Date(y, m, d + 1, 22, 30),allDay: false},
+    {title: 'Click for Google',start: new Date(y, m, 28),end: new Date(y, m, 29),url: 'http://google.com/'}
+  ];
+});
 
-  .config(function($locationProvider, $urlRouterProvider, configProvider) {
-    var config = configProvider.config;
+app.controller('demoCtrl', function($scope) {
+  $scope.events = data.events;
+  $scope.eventSource = data.eventSource;
+});;var app = angular.module('nx-calendar');
 
-    config.routing.html5Mode = false; // needs to work everywhere
-    config.routing.default = "/month";
+var nxCalendarDirective = function nxCalendarDirective(directive) {
+  return ['nxCalendarConfiguration', function(configuration) {
+    var template = configuration.template;
 
-    // Default route:
-    $urlRouterProvider.otherwise(config.routing.default);
-
-    if(config.routing.html5Mode) {
-      $locationProvider.html5Mode(true);
-    }
-    else {
-      $locationProvider.html5Mode(false);
-      var routingPrefix = config.routing.prefix;
-      if(routingPrefix && routingPrefix.length > 0) {
-        $locationProvider.hashPrefix(routingPrefix);
+    return {
+      scope: {},
+      controller: function(){},
+      templateUrl: template('calendar'),
+      link: function($scope, tElem, tAttrs) {
+        console.log('loaded');
       }
+    };
+  }];
+};
+
+app.directive('nxCalendar', nxCalendarDirective('nxCalendar'));
+app.directive('nxCal', nxCalendarDirective('nxCal'));
+
+;var app = angular.module('nx-calendar')
+
+  .filter('isEvent', function() {
+    return function(evt) {
+      return false;
     }
-  })
-
-  .run(function($rootScope, $state, $stateParams) {
-    $rootScope.$state = $state;
-    $rootScope.$stateParams = $stateParams;
-  })
-
-  .controller('appCtrl', function($scope) {
-    $scope.title = 'Raynode - Tobias Kopelke';
   })
 
 ;
+;var app = angular.module('nx-calendar')
 
-//window.App = module;
+  .filter('isEventList', function() {
+    return function(list) {
+      return angular.isArray(list);
+    }
+  })
+
+;
+;var app = angular.module('nx-calendar')
+
+  .filter('isEventSource', function() {
+    return function(source) {
+      return false;
+    }
+  })
+
+;

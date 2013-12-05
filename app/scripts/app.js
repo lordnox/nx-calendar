@@ -11,7 +11,7 @@ var module = angular.module('application', [
     var config = configProvider.config;
 
     config.routing.html5Mode = false; // needs to work everywhere
-    config.routing.default = "/month";
+    config.routing.default = "/day";
 
     // Default route:
     $urlRouterProvider.otherwise(config.routing.default);
@@ -34,7 +34,7 @@ var module = angular.module('application', [
   })
 
   .controller('appCtrl', function($scope) {
-    $scope.title = 'Raynode - Tobias Kopelke';
+    $scope.title = 'Raynode - nx-calendar directive demo';
   })
 
 ;

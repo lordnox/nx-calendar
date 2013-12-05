@@ -26,6 +26,12 @@ addFiles(preFiles, project.files["3rd"]);
 // add app files
 addFiles(postFiles, project.files.app, project.apppath);
 
+// add app files
+addFiles(postFiles, project.files.main, project.apppath);
+
+// add templates
+addFiles(postFiles, project.files.tpl);
+
 // add test files at the end
 addFiles(preFiles, project.files.test);
 

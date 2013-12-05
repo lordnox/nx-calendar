@@ -6,6 +6,7 @@ describe("Unit: Testing Controllers", function() {
   var module
     , $rootScope
     , $controller
+    , $scope
     ;
 
   var controller = function(ctrl, mock) {
@@ -18,6 +19,7 @@ describe("Unit: Testing Controllers", function() {
 
     //now run that scope through the controller function,
     //injecting any services or other injectables we need.
+    $scope = mock.$scope;
     return $controller(ctrl, mock);
   };
 
@@ -36,8 +38,21 @@ describe("Unit: Testing Controllers", function() {
     $controller = _$controller_;
   }));
 
-  it("should find the demoCtrl", function() {
-    controller('demoCtrl').should.exist;
+  describe("demoCtrl", function(){
+    var ctrl;
+
+    beforeEach(function() {
+      ctrl = controller('demoCtrl');
+    });
+
+    it("should exist", function() {
+      ctrl.should.exist;
+    });
+
+    it("should have added properties to the scope", function() {
+      should.exist($scope.events);
+      should.exist($scope.eventSource);
+    });
   });
 
 });

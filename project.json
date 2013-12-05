@@ -11,13 +11,13 @@
   "apppath": "app/scripts",
   "assetspath": "scripts",
   "testpath": "app/scripts/modules/tests/{**/*,*}.js",
+  "templatesPath": "test/templates",
   "files": {
     "app": [
         "modules/*/module.js",
         "modules/*/app.js",
         "modules/**/*.js",
-        "!**/tests/**",
-        "app.js"
+        "!**/tests/**"
     ],
     "bower": [
       "angular/angular.js",
@@ -25,7 +25,13 @@
       "angular-ui-router/release/angular-ui-router.js",
       "angularjs-scope.safeapply/src/Scope.SafeApply.js"
     ],
+    "main": [
+      "app.js"
+    ],
     "3rd": [
+    ],
+    "tpl": [
+      "test/templates/templates.js"
     ],
     "test": [
       "node_modules/chai/chai.js",
@@ -35,6 +41,9 @@
     "styles": [
       "app/styles/reset.css",
       "app/styles/app.css"
+    ],
+    "templates": [
+      "scripts/**/*.html"
     ]
   }
 }

@@ -21,10 +21,10 @@ describe("Unit: Testing Controllers", function() {
     return $controller(ctrl, mock);
   };
 
-  beforeEach(angular.mock.module('app'));
+  beforeEach(angular.mock.module('nx-calendar'));
 
   beforeEach(function() {
-    module = angular.module('app');
+    module = angular.module('nx-calendar');
   });
 
   /* IMPORTANT!
