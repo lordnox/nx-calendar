@@ -35,15 +35,61 @@ describe("Unit: Testing Controllers", function() {
 
   describe("nxCalendar", function() {
 
+    var definition  = '<div nx-calendar=""></div>'
+      , shortDef    = '<div nx-cal=""></div>';
+
     it("should not compile a div element", function() {
-      var element = compile("<div/>");
-      element.html().should.be.equal("<div></div>");
+      compile("<div></div>").html().should.be.equal("<div></div>");
     });
 
     it("should compile a div with attribute nx-calendar", function() {
-      var element = compile("<div nx-calendar/>");
-      element.html().should.not.be.equal("<div nx-calendar=\"\"></div>");
-      console.log(element.html());
+      compile(definition).html().should.not.be.equal(definition);
+    });
+
+    it("should compile a div with attribute nx-cal", function() {
+      compile(shortDef).html().should.not.be.equal(shortDef);
+    });
+
+    it("should compile short and long equally", function() {
+      var s = compile(shortDef).html()
+        , l = compile(definition).html()
+        , ps = shortDef.indexOf(">")
+        , pl = definition.indexOf(">")
+        ;
+      s.substr(ps).should.be.equal(l.substr(pl));
+    });
+
+    it("should have 3 comments", function() {
+      var html = compile(definition).html();
+      html.should.match(/<!-- ngSwitchWhen: day -->/);
+      html.should.match(/<!-- ngSwitchWhen: month -->/);
+      html.should.match(/<!-- ngSwitchWhen: events -->/);
+    });
+
+  });
+
+  describe("nxCalendarDayView", function() {
+
+    var definition  = '<div nx-calendar-day="" nx-cal-config="config"></div>'
+      , shortDef    = '<div nx-cal-day="" nx-cal-config="config"></div>';
+
+    var element, scope;
+
+    it("should compile a div with attribute nx-calendar-day", function() {
+      compile(definition).html().should.not.be.equal(definition);
+    });
+
+    it("should compile a div with attribute nx-cal-day", function() {
+      compile(shortDef).html().should.not.be.equal(shortDef);
+    });
+
+    it("should compile short and long equally", function() {
+      var s = compile(shortDef).html()
+        , l = compile(definition).html()
+        , ps = shortDef.indexOf(">")
+        , pl = definition.indexOf(">")
+        ;
+      s.substr(ps).should.be.equal(l.substr(pl));
     });
 
   });

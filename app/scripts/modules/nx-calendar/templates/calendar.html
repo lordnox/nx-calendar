@@ -1,4 +1,5 @@
 <div class="calendar table-container" ng-switch on="view">
+  view: {{view}}
   <div ng-switch-when="day" nx-cal-day nx-cal-config="config"></div>
   <div ng-switch-when="month" nx-cal-month nx-cal-config="config"></div>
   <div ng-switch-when="events" nx-cal-events nx-cal-config="config"></div>

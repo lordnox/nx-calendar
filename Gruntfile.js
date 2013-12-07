@@ -33,6 +33,9 @@ addFiles(jsFiles, project.files["3rd"]);
 // add app files
 addFiles(jsFiles, project.files.app, project.apppath);
 
+// add app files
+addFiles(jsFiles, project.files.main, project.apppath);
+
 // add styles
 addFiles(cssFiles, project.files.styles);
 
@@ -40,16 +43,7 @@ addFiles(tplFiles, project.files.templates);
 
 module.exports = function(grunt) {
 
-//  console.log(Object.keys(grunt));
-
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
-
-  // grunt.loadNpmTasks('grunt-shell');
-  // grunt.loadNpmTasks('grunt-open');
-  // grunt.loadNpmTasks('grunt-contrib-watch');
-  // grunt.loadNpmTasks('grunt-contrib-concat');
-  // grunt.loadNpmTasks('grunt-contrib-connect');
-  // grunt.loadNpmTasks('grunt-karma');
 
   grunt.initConfig({
     build: {

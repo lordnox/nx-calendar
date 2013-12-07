@@ -22640,36 +22640,7 @@ angular.module('Scope.safeApply', []).run(function($rootScope) {
 ;
 
 
-;var app = angular.module('nx-calendar', [])
-  .provider('nxCalendarConfiguration', function() {
-    var config = {
-
-      path        : ['scripts', 'modules']
-    , directory   : 'templates'
-    , suffix      : '.html'
-    , module      : 'nx-calendar'
-
-    , template: function(path) {
-        return config.path.concat([config.module, config.directory])
-                          .concat(Array.prototype.slice.call(arguments))
-                          .join('/') + config.suffix;
-      }
-    };
-
-    return {
-      $get: function() {
-        return config;
-      },
-      template: config.template,
-      set: function(key, value) {
-        config[key] = value;
-      },
-      config: config
-    };
-  })
-;
-
-;
+;var app = angular.module('nx-calendar', []);
 
 
 ;
@@ -22704,16 +22675,149 @@ app.controller('demoCtrl', function($scope) {
   $scope.eventSource = data.eventSource;
 });;var app = angular.module('nx-calendar');
 
+var nxCalendarDirective = function nxCalendarDayEventDirective(directive) {
+  return ['nxCalendarConfiguration', 'nxCalendarUtilities', function(configuration, utils) {
+    var template = configuration.template;
+
+    return {
+      scope: {},
+      controller: ['$scope', function($scope) {
+        $scope.view = 'dayEvent';
+      }],
+      templateUrl: template('calendarDayEventView'),
+      link: function($scope, tElem, tAttrs) {
+      }
+    };
+  }];
+};
+
+app.directive('nxCalendarDayEvent', nxCalendarDirective('nxCalendarDayEvent'));
+app.directive('nxCalDayEvent', nxCalendarDirective('nxCalDayEvent'));
+
+
+;var app = angular.module('nx-calendar');
+
+var nxCalendarDirective = function nxCalendarDayHoursDirective(directive) {
+  return ['nxCalendarConfiguration', 'nxCalendarUtilities', function(configuration, utils) {
+    var template = configuration.template;
+
+    return {
+      scope: {},
+      controller: ['$scope', function($scope) {
+        $scope.view = 'dayHours';
+      }],
+      templateUrl: template('calendarDayHoursView'),
+      link: function($scope, tElem, tAttrs) {
+      }
+    };
+  }];
+};
+
+app.directive('nxCalendarDayHours', nxCalendarDirective('nxCalendarDayHours'));
+app.directive('nxCalDayHours', nxCalendarDirective('nxCalDayHours'));
+
+
+;var app = angular.module('nx-calendar');
+
+var nxCalendarDirective = function nxCalendarDayWholeDirective(directive) {
+  return ['nxCalendarConfiguration', 'nxCalendarUtilities', function(configuration, utils) {
+    var template = configuration.template;
+
+    return {
+      scope: {},
+      controller: ['$scope', function($scope) {
+        $scope.view = 'DayWhole';
+      }],
+      templateUrl: template('calendarDayWholeView'),
+      link: function($scope, tElem, tAttrs) {
+      }
+    };
+  }];
+};
+
+app.directive('nxCalendarDayWhole', nxCalendarDirective('nxCalendarDayWhole'));
+app.directive('nxCalDayWhole', nxCalendarDirective('nxCalDayWhole'));
+
+
+;var app = angular.module('nx-calendar');
+
+var nxCalendarDirective = function nxCalendarDayDirective(directive) {
+  return ['nxCalendarConfiguration', 'nxCalendarUtilities', function(configuration, utils) {
+    var template = configuration.template;
+
+    return {
+      scope: {},
+      controller: ['$scope', function($scope) {
+        $scope.view = 'day';
+      }],
+      templateUrl: template('calendarDayView'),
+      link: function($scope, tElem, tAttrs) {
+      }
+    };
+  }];
+};
+
+app.directive('nxCalendarDay', nxCalendarDirective('nxCalendarDay'));
+app.directive('nxCalDay', nxCalendarDirective('nxCalDay'));
+
+
+;var app = angular.module('nx-calendar');
+
+var nxCalendarDirective = function nxCalendarEventsDirective(directive) {
+  return ['nxCalendarConfiguration', 'nxCalendarUtilities', function(configuration, utils) {
+    var template = configuration.template;
+
+    return {
+      scope: {},
+      controller: ['$scope', function($scope) {
+        $scope.view = 'events';
+      }],
+      templateUrl: template('calendarEventsView'),
+      link: function($scope, tElem, tAttrs) {
+      }
+    };
+  }];
+};
+
+app.directive('nxCalendarEvents', nxCalendarDirective('nxCalendarEvents'));
+app.directive('nxCalEvents', nxCalendarDirective('nxCalEvents'));
+
+
+;var app = angular.module('nx-calendar');
+
+var nxCalendarDirective = function nxCalendarMonthDirective(directive) {
+  return ['nxCalendarConfiguration', 'nxCalendarUtilities', function(configuration, utils) {
+    var template = configuration.template;
+
+    return {
+      scope: {},
+      controller: ['$scope', function($scope) {
+        $scope.view = 'month';
+      }],
+      templateUrl: template('calendarMonthView'),
+      link: function($scope, tElem, tAttrs) {
+      }
+    };
+  }];
+};
+
+app.directive('nxCalendarMonth', nxCalendarDirective('nxCalendarMonth'));
+app.directive('nxCalMonth', nxCalendarDirective('nxCalMonth'));
+
+
+;var app = angular.module('nx-calendar');
+
 var nxCalendarDirective = function nxCalendarDirective(directive) {
   return ['nxCalendarConfiguration', function(configuration) {
     var template = configuration.template;
 
     return {
       scope: {},
-      controller: function(){},
+      controller: ['$scope', function($scope) {
+        $scope.view = 'day';
+      }],
       templateUrl: template('calendar'),
       link: function($scope, tElem, tAttrs) {
-        console.log('loaded');
       }
     };
   }];
@@ -22721,6 +22825,7 @@ var nxCalendarDirective = function nxCalendarDirective(directive) {
 
 app.directive('nxCalendar', nxCalendarDirective('nxCalendar'));
 app.directive('nxCal', nxCalendarDirective('nxCal'));
+
 
 ;var app = angular.module('nx-calendar')
 
@@ -22749,3 +22854,89 @@ app.directive('nxCal', nxCalendarDirective('nxCal'));
   })
 
 ;
+;angular.module('nx-calendar').provider('nxCalendarConfiguration', function() {
+    var config = {
+
+      path        : ['scripts', 'modules']
+    , directory   : 'templates'
+    , suffix      : '.html'
+    , module      : 'nx-calendar'
+
+    , template: function(path) {
+        return config.path.concat([config.module, config.directory])
+                          .concat(Array.prototype.slice.call(arguments))
+                          .join('/') + config.suffix;
+      }
+    };
+
+    return {
+      $get: function() {
+        return config;
+      },
+      template: config.template,
+      set: function(key, value) {
+        config[key] = value;
+      },
+      config: config
+    };
+  });angular.module('nx-calendar').provider('nxCalendarUtilities', function() {
+    var utils = {
+      uuid: function() {
+        // @TODO
+        // replace by https://github.com/broofa/node-uuid/blob/master/uuid.js
+        // @see http://stackoverflow.com/questions/6906916/collisions-when-generating-uuids-in-javascript
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+          return v.toString(16);
+        });
+      }
+    };
+
+    return {
+      $get: function() {
+        return utils;
+      },
+      utils: utils
+    };
+  });
+var module = angular.module('application', [
+    'ui.router',
+    'configuration',
+    'Scope.safeApply',
+    'nx-calendar',
+    'nx-calendar-demo',
+  ])
+
+  .config(function($locationProvider, $urlRouterProvider, configProvider) {
+    var config = configProvider.config;
+
+    config.routing.html5Mode = false; // needs to work everywhere
+    config.routing.default = "/day";
+
+    // Default route:
+    $urlRouterProvider.otherwise(config.routing.default);
+
+    if(config.routing.html5Mode) {
+      $locationProvider.html5Mode(true);
+    }
+    else {
+      $locationProvider.html5Mode(false);
+      var routingPrefix = config.routing.prefix;
+      if(routingPrefix && routingPrefix.length > 0) {
+        $locationProvider.hashPrefix(routingPrefix);
+      }
+    }
+  })
+
+  .run(function($rootScope, $state, $stateParams) {
+    $rootScope.$state = $state;
+    $rootScope.$stateParams = $stateParams;
+  })
+
+  .controller('appCtrl', function($scope) {
+    $scope.title = 'Raynode - nx-calendar directive demo';
+  })
+
+;
+
+//window.App = module;

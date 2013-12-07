@@ -6,10 +6,11 @@ var nxCalendarDirective = function nxCalendarDirective(directive) {
 
     return {
       scope: {},
-      controller: function(){},
+      controller: ['$scope', function($scope) {
+        $scope.view = 'day';
+      }],
       templateUrl: template('calendar'),
       link: function($scope, tElem, tAttrs) {
-        console.log('loaded');
       }
     };
   }];
@@ -17,4 +18,5 @@ var nxCalendarDirective = function nxCalendarDirective(directive) {
 
 app.directive('nxCalendar', nxCalendarDirective('nxCalendar'));
 app.directive('nxCal', nxCalendarDirective('nxCal'));
+
 
