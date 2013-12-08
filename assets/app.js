@@ -22640,36 +22640,7 @@ angular.module('Scope.safeApply', []).run(function($rootScope) {
 ;
 
 
-;var app = angular.module('nx-calendar', [])
-  .provider('nxCalendarConfiguration', function() {
-    var config = {
-
-      path        : ['scripts', 'modules']
-    , directory   : 'templates'
-    , suffix      : '.html'
-    , module      : 'nx-calendar'
-
-    , template: function(path) {
-        return config.path.concat([config.module, config.directory])
-                          .concat(Array.prototype.slice.call(arguments))
-                          .join('/') + config.suffix;
-      }
-    };
-
-    return {
-      $get: function() {
-        return config;
-      },
-      template: config.template,
-      set: function(key, value) {
-        config[key] = value;
-      },
-      config: config
-    };
-  })
-;
-
-;
+;var app = angular.module('nx-calendar', []);
 
 
 ;
@@ -22702,7 +22673,257 @@ app.run(function() {
 app.controller('demoCtrl', function($scope) {
   $scope.events = data.events;
   $scope.eventSource = data.eventSource;
-});;var app = angular.module('nx-calendar')
+});;
+var views = ['day', 'month', 'events'];
+
+angular.module('nx-calendar')
+  .controller('nx-calendar-controller', ['$scope', 'nxCalendarConfiguration', function($scope, configuration) {
+    $scope.config = angular.extend(configuration.config, $scope.config || {});
+
+    // if there is no correct "view", set it to the first view available
+    if(views.indexOf($scope.view) === -1) {
+      $scope.view = views[0];
+    }
+
+  }])
+;;var app = angular.module('nx-calendar');
+
+var directiveDefinition = function directiveDefinition(directive) {
+  return ['nxCalendarConfiguration', 'nxCalendarUtilities', function(configuration, utils) {
+    var template = configuration.template;
+
+    return {
+      scope: {},
+      controller: ['$scope', function($scope) {
+      }],
+      templateUrl: template('calendarDayHoursEvent'),
+      link: function($scope, tElem, tAttrs) {
+      }
+    };
+  }];
+};
+
+['nxCalendarDayHoursEvent', 'nxCalDayHoursEvent'].map(function(directive) {
+  app.directive(directive, directiveDefinition(directive));
+})
+
+
+;var app = angular.module('nx-calendar');
+
+var directiveDefinition = function directiveDefinition(directive) {
+  return ['nxCalendarConfiguration', 'nxCalendarUtilities', function(configuration, utils) {
+    var template = configuration.template;
+
+    return {
+      scope: {},
+      controller: ['$scope', function($scope) {
+      }],
+      templateUrl: template('calendarDayHoursNow'),
+      link: function($scope, tElem, tAttrs) {
+      }
+    };
+  }];
+};
+
+['nxCalendarDayHoursNow', 'nxCalDayHoursNow'].map(function(directive) {
+  app.directive(directive, directiveDefinition(directive));
+})
+
+
+;var app = angular.module('nx-calendar');
+
+var directiveDefinition = function directiveDefinition(directive) {
+  return ['nxCalendarConfiguration', 'nxCalendarUtilities', function(configuration, utils) {
+    var template = configuration.template;
+
+    return {
+      scope: {},
+      controller: ['$scope', function($scope) {
+      }],
+      templateUrl: template('calendarDayHours'),
+      link: function($scope, tElem, tAttrs) {
+      }
+    };
+  }];
+};
+
+['nxCalendarDayHours', 'nxCalDayHours'].map(function(directive) {
+  app.directive(directive, directiveDefinition(directive));
+})
+
+
+;var app = angular.module('nx-calendar');
+
+var directiveDefinition = function directiveDefinition(directive) {
+  return ['nxCalendarConfiguration', 'nxCalendarUtilities', function(configuration, utils) {
+    var template = configuration.template;
+
+    return {
+      scope: {},
+      controller: ['$scope', function($scope) {
+      }],
+      templateUrl: template('calendarDayWholeEvent'),
+      link: function($scope, tElem, tAttrs) {
+      }
+    };
+  }];
+};
+
+['nxCalendarDayWholeEvent', 'nxCalDayWholeEvent'].map(function(directive) {
+  app.directive(directive, directiveDefinition(directive));
+})
+
+
+;var app = angular.module('nx-calendar');
+
+var directiveDefinition = function directiveDefinition(directive) {
+  return ['nxCalendarConfiguration', 'nxCalendarUtilities', function(configuration, utils) {
+    var template = configuration.template;
+
+    return {
+      scope: {},
+      controller: ['$scope', function($scope) {
+      }],
+      templateUrl: template('calendarDayWhole'),
+      link: function($scope, tElem, tAttrs) {
+      }
+    };
+  }];
+};
+
+['nxCalendarDayWhole', 'nxCalDayWhole'].map(function(directive) {
+  app.directive(directive, directiveDefinition(directive));
+})
+
+
+;var app = angular.module('nx-calendar');
+
+var directiveDefinition = function directiveDefinition(directive) {
+  return ['nxCalendarConfiguration', 'nxCalendarUtilities', function(configuration, utils) {
+    var template = configuration.template;
+
+    return {
+      scope: {},
+      controller: ['$scope', function($scope) {
+      }],
+      templateUrl: template('calendarDay'),
+      link: function($scope, tElem, tAttrs) {
+      }
+    };
+  }];
+};
+
+['nxCalendarDay', 'nxCalDay'].map(function(directive) {
+  app.directive(directive, directiveDefinition(directive));
+})
+
+
+;var app = angular.module('nx-calendar');
+
+var directiveDefinition = function directiveDefinition(directive) {
+  return ['nxCalendarConfiguration', 'nxCalendarUtilities', function(configuration, utils) {
+    var template = configuration.template;
+
+    return {
+      scope: {},
+      controller: ['$scope', function($scope) {
+      }],
+      templateUrl: template('calendarEvents'),
+      link: function($scope, tElem, tAttrs) {
+      }
+    };
+  }];
+};
+
+['nxCalendarEvents', 'nxCalEvents'].map(function(directive) {
+  app.directive(directive, directiveDefinition(directive));
+})
+
+
+;var app = angular.module('nx-calendar');
+
+var directiveDefinition = function directiveDefinition(directive) {
+  return ['nxCalendarConfiguration', 'nxCalendarUtilities', function(configuration, utils) {
+    var template = configuration.template;
+
+    return {
+      scope: {},
+      controller: ['$scope', function($scope) {
+      }],
+      templateUrl: template('calendarMonth'),
+      link: function($scope, tElem, tAttrs) {
+      }
+    };
+  }];
+};
+
+['nxCalendarMonth', 'nxCalMonth'].map(function(directive) {
+  app.directive(directive, directiveDefinition(directive));
+})
+
+
+;var app = angular.module('nx-calendar');
+
+var directiveDefinition = function directiveDefinition(directive) {
+  return ['nxCalendarConfiguration', 'nxCalendarUtilities', function(configuration, utils) {
+    var template = configuration.template;
+
+    return {
+      scope: {
+        config: "=" + directive + "Config"
+      },
+      controller: ['$scope', function($scope) {
+      }],
+      templateUrl: template('calendar'),
+      link: function($scope, iElem, iAttrs) {
+        $scope.view = iAttrs.view;
+      }
+    };
+  }];
+};
+
+['nxCalendar', 'nxCal'].map(function(directive) {
+  app.directive(directive, directiveDefinition(directive));
+})
+;var app = angular.module('nx-calendar');
+
+var directiveDefinition = function directiveDefinition(directive) {
+  return [function() {
+
+    return {
+      restrict: 'A',
+      scope: {
+        position: '=nxPosition'
+      },
+      link: function($scope, iElement, iAttrs) {
+        var refresh = function refresh() {
+          console.log('REFRESH');
+          $scope.x = $scope.position.x;
+          $scope.y = $scope.position.y;
+          $scope.mode = ['%', 'percent'].indexOf($scope.position.mode) ? '%' : 'px';
+
+          if($scope.mode === '%') {
+            $scope.x = Math.min(100, Math.max(0, $scope.x));
+            $scope.y = Math.min(100, Math.max(0, $scope.y));
+          }
+
+          iElement.css({
+            left    : $scope.x + "" + $scope.mode
+          , top     : $scope.y + "" + $scope.mode
+          });
+        }
+
+        $scope.$watch($scope.position, refresh);
+      }
+
+    };
+  }];
+};
+
+['nxPosition'].map(function(directive) {
+  app.directive(directive, directiveDefinition(directive));
+})
+;var app = angular.module('nx-calendar')
 
   .filter('isEvent', function() {
     return function(evt) {
@@ -22710,11 +22931,8 @@ app.controller('demoCtrl', function($scope) {
     }
   })
 
-  .filter('isEventSource', function() {
-    return function(source) {
-      return false;
-    }
-  })
+;
+;var app = angular.module('nx-calendar')
 
   .filter('isEventList', function() {
     return function(list) {
@@ -22723,7 +22941,70 @@ app.controller('demoCtrl', function($scope) {
   })
 
 ;
+;var app = angular.module('nx-calendar')
+
+  .filter('isEventSource', function() {
+    return function(source) {
+      return false;
+    }
+  })
+
 ;
+;angular.module('nx-calendar').provider('nxCalendarConfiguration', function() {
+    var config = {
+
+      path        : ['scripts', 'modules']
+    , directory   : 'templates'
+    , suffix      : '.html'
+    , module      : 'nx-calendar'
+
+    , template: function(path) {
+        return config.path.concat([config.module, config.directory])
+                          .concat(Array.prototype.slice.call(arguments))
+                          .join('/') + config.suffix;
+      }
+    , config: {
+        format: {
+          time: 'H a'
+        , dayLabel: {
+            long: 'dddd, t\\he Do of MMMM'
+          , short: 'dddd'
+          }
+        , label: 'wo'
+        }
+      }
+    };
+
+    return {
+      $get: function() {
+        return config;
+      },
+      template: config.template,
+      set: function(key, value) {
+        config[key] = value;
+      },
+      config: config
+    };
+  });angular.module('nx-calendar').provider('nxCalendarUtilities', function() {
+    var utils = {
+      uuid: function() {
+        // @TODO
+        // replace by https://github.com/broofa/node-uuid/blob/master/uuid.js
+        // @see http://stackoverflow.com/questions/6906916/collisions-when-generating-uuids-in-javascript
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+          return v.toString(16);
+        });
+      }
+    };
+
+    return {
+      $get: function() {
+        return utils;
+      },
+      utils: utils
+    };
+  });
 var module = angular.module('application', [
     'ui.router',
     'configuration',
