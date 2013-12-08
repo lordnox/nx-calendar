@@ -33,26 +33,89 @@ describe("Unit: Testing Controllers", function() {
     $compile = _$compile_;
   }));
 
+  describe("nxPosition", function() {
+    var definition  = '<div nx-position="position"></div>'
+      ;
+
+    var scope;
+
+    beforeEach(function() {
+      scope = $rootScope.$new();
+    });
+
+    it("should compile a div with attribute nx-position", function() {
+      scope.position = { x: 100, y: 100 };
+      compile(definition, scope).html().should.not.be.equal(definition);
+    });
+
+    it("should set the mode to '%' when not defined", function() {
+      scope.position = { x: 100, y: 100 };
+      compile(definition, scope).html().should.not.be.equal(definition);
+      var child = scope.$$childHead;
+      child.should.have.property('x');
+      child.should.have.property('y');
+      child.should.have.property('mode');
+      child.x.should.be.equal(scope.position.x);
+      child.y.should.be.equal(scope.position.y);
+      child.mode.should.be.equal('%');
+    });
+
+    it("should set x and y to be between 0 and 100 when in '%' mode", function() {
+      scope.position = { x: -10, y: 101 };
+      compile(definition, scope).html().should.not.be.equal(definition);
+      var child = scope.$$childHead;
+      child.x.should.be.equal(0);
+      child.y.should.be.equal(100);
+    });
+
+    it("should react to a position change", function() {
+      scope.position = { x: -10, y: 101 };
+      var element = compile(definition, scope)
+      element.html().should.not.be.equal(definition);
+      var child = scope.$$childHead;
+      child.x.should.be.equal(0);
+      child.y.should.be.equal(100);
+      console.log('------------')
+      scope.position.x = 50;
+      console.log('pos = 50', ' digest now');
+      element.scope().$digest();
+      console.log(scope.position);
+      console.log(child.position);
+      console.log(child.x, child.y);
+      //@TODO check why $watch is not reacting...
+      //child.x.should.be.equal(50);
+    });
+
+  });
+
   describe("nxCalendar", function() {
 
-    var definition  = '<div nx-calendar=""></div>'
-      , shortDef    = '<div nx-cal=""></div>';
+    var definition  = '<div nx-calendar="" nx-calendar-config="config"></div>'
+      , shortDef    = '<div nx-cal="" nx-cal-config="config"></div>'
+      ;
+
+    var scope;
+
+    beforeEach(function() {
+      scope = $rootScope.$new();
+    });
 
     it("should not compile a div element", function() {
-      compile("<div></div>").html().should.be.equal("<div></div>");
+      compile("<div></div>", scope).html().should.be.equal("<div></div>");
     });
 
     it("should compile a div with attribute nx-calendar", function() {
-      compile(definition).html().should.not.be.equal(definition);
+      scope.config = { test: true };
+      compile(definition, scope).html().should.not.be.equal(definition);
     });
 
     it("should compile a div with attribute nx-cal", function() {
-      compile(shortDef).html().should.not.be.equal(shortDef);
+      compile(shortDef, scope).html().should.not.be.equal(shortDef);
     });
 
     it("should compile short and long equally", function() {
-      var s = compile(shortDef).html()
-        , l = compile(definition).html()
+      var s = compile(shortDef, scope).html()
+        , l = compile(definition, scope).html()
         , ps = shortDef.indexOf(">")
         , pl = definition.indexOf(">")
         ;
@@ -71,7 +134,8 @@ describe("Unit: Testing Controllers", function() {
   describe("nxCalendarDayView", function() {
 
     var definition  = '<div nx-calendar-day="" nx-cal-config="config"></div>'
-      , shortDef    = '<div nx-cal-day="" nx-cal-config="config"></div>';
+      , shortDef    = '<div nx-cal-day="" nx-cal-config="config"></div>'
+      ;
 
     var element, scope;
 

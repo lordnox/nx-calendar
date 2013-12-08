@@ -5,19 +5,18 @@ var directiveDefinition = function directiveDefinition(directive) {
     var template = configuration.template;
 
     return {
-      scope: {
-        config: "=" + directive + "Config"
-      },
+      scope: {},
       controller: ['$scope', function($scope) {
       }],
-      templateUrl: template('calendar'),
-      link: function($scope, iElem, iAttrs) {
-        $scope.view = iAttrs.view;
+      templateUrl: template('calendarEvents'),
+      link: function($scope, tElem, tAttrs) {
       }
     };
   }];
 };
 
-['nxCalendar', 'nxCal'].map(function(directive) {
+['nxCalendarEvents', 'nxCalEvents'].map(function(directive) {
   app.directive(directive, directiveDefinition(directive));
 })
+
+

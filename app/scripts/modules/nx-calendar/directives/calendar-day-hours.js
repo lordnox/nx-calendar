@@ -1,22 +1,22 @@
 var app = angular.module('nx-calendar');
 
-var nxCalendarDirective = function nxCalendarDayDirective(directive) {
+var directiveDefinition = function directiveDefinition(directive) {
   return ['nxCalendarConfiguration', 'nxCalendarUtilities', function(configuration, utils) {
     var template = configuration.template;
 
     return {
       scope: {},
       controller: ['$scope', function($scope) {
-        $scope.view = 'day';
       }],
-      templateUrl: template('calendarDayView'),
+      templateUrl: template('calendarDayHours'),
       link: function($scope, tElem, tAttrs) {
       }
     };
   }];
 };
 
-app.directive('nxCalendarDay', nxCalendarDirective('nxCalendarDay'));
-app.directive('nxCalDay', nxCalendarDirective('nxCalDay'));
+['nxCalendarDayHours', 'nxCalDayHours'].map(function(directive) {
+  app.directive(directive, directiveDefinition(directive));
+})
 
 

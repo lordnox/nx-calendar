@@ -11,6 +11,16 @@ angular.module('nx-calendar').provider('nxCalendarConfiguration', function() {
                           .concat(Array.prototype.slice.call(arguments))
                           .join('/') + config.suffix;
       }
+    , config: {
+        format: {
+          time: 'H a'
+        , dayLabel: {
+            long: 'dddd, t\\he Do of MMMM'
+          , short: 'dddd'
+          }
+        , label: 'wo'
+        }
+      }
     };
 
     return {
