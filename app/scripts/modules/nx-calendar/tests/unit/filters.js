@@ -74,17 +74,38 @@ describe("Unit: Testing Filters", function() {
     });
   });
 
-  describe("toMoment", function() {
+  describe("isEventAfter", function() {
     var filter;
 
     beforeEach(function() {
-      filter = $filter("toMoment");
+      filter = $filter("isEventAfter");
     });
 
-    it("should change a google-event to a moment-event", function() {
-      var evt = filter(fixtures.googleCalendarEvent);
-      moment.isMoment(evt.start).should.be.ok;
-      moment.isMoment(evt.end).should.be.ok;
+    it("should exist", function() {
+      should.exist(filter);
+    });
+
+    it("should take now, if no second argument was given", function() {
+      var evt = {
+        start: moment().add(1, 'second')
+      };
+      filter(evt).should.be.ok;
+    })
+
+    it("should evaluate to true when the start time is before the time", function() {
+      var time = moment();
+      var evt = {
+        start: time.clone().add(1, 'second')
+      };
+      filter(evt, time).should.be.ok;
+    });
+
+    it("should evaluate to false when the start time is after the time", function() {
+      var time = moment();
+      var evt = {
+        start: time.clone().subtract(1, 'second')
+      };
+      filter(evt, time).should.not.be.ok;
     });
   });
 
@@ -118,41 +139,6 @@ describe("Unit: Testing Filters", function() {
       var time = moment();
       var evt = {
         end: time.clone().add(1, 'second')
-      };
-      filter(evt, time).should.not.be.ok;
-    });
-  });
-
-  describe("isEventAfter", function() {
-    var filter;
-
-    beforeEach(function() {
-      filter = $filter("isEventAfter");
-    });
-
-    it("should exist", function() {
-      should.exist(filter);
-    });
-
-    it("should take now, if no second argument was given", function() {
-      var evt = {
-        start: moment().add(1, 'second')
-      };
-      filter(evt).should.be.ok;
-    })
-
-    it("should evaluate to true when the start time is before the time", function() {
-      var time = moment();
-      var evt = {
-        start: time.clone().add(1, 'second')
-      };
-      filter(evt, time).should.be.ok;
-    });
-
-    it("should evaluate to false when the start time is after the time", function() {
-      var time = moment();
-      var evt = {
-        start: time.clone().subtract(1, 'second')
       };
       filter(evt, time).should.not.be.ok;
     });
@@ -223,29 +209,6 @@ describe("Unit: Testing Filters", function() {
           end = time.clone().add(3, 'second');
       filter(evt, start, end).should.be.ok;
     });
-
-  });
-
-  describe("isEventSource", function() {
-    var filter;
-
-    beforeEach(function() {
-      filter = $filter("isEventSource");
-    });
-
-    it("should exist", function() {
-      should.exist(filter);
-    });
-
-    it("should eval false values to false", function() {
-      filter().should.not.be.ok;
-      filter(false).should.not.be.ok;
-      filter({}).should.not.be.ok;
-      filter(0).should.not.be.ok;
-      filter(123).should.not.be.ok;
-      filter(true).should.not.be.ok;
-      filter('argh').should.not.be.ok;
-    });
   });
 
   describe("isEventList", function() {
@@ -272,6 +235,42 @@ describe("Unit: Testing Filters", function() {
     it("should work", function() {
       // @TODO should check contents
       filter([]).should.be.ok;
+    });
+  });
+
+  describe("isEventSource", function() {
+    var filter;
+
+    beforeEach(function() {
+      filter = $filter("isEventSource");
+    });
+
+    it("should exist", function() {
+      should.exist(filter);
+    });
+
+    it("should eval false values to false", function() {
+      filter().should.not.be.ok;
+      filter(false).should.not.be.ok;
+      filter({}).should.not.be.ok;
+      filter(0).should.not.be.ok;
+      filter(123).should.not.be.ok;
+      filter(true).should.not.be.ok;
+      filter('argh').should.not.be.ok;
+    });
+  });
+
+  describe("toMoment", function() {
+    var filter;
+
+    beforeEach(function() {
+      filter = $filter("toMoment");
+    });
+
+    it("should change a google-event to a moment-event", function() {
+      var evt = filter(fixtures.googleCalendarEvent);
+      moment.isMoment(evt.start).should.be.ok;
+      moment.isMoment(evt.end).should.be.ok;
     });
   });
 });
