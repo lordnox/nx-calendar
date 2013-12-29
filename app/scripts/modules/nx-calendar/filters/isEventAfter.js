@@ -1,8 +1,8 @@
 var app = angular.module('nx-calendar')
 
-  .filter('isEventBefore', function() {
-    return function(evt) {
-      return false;
+  .filter('isEventAfter', function(toMomentFilter) {
+    return function(evt, time) {
+      return toMomentFilter(evt).start.isAfter(time || moment());
     }
   })
 

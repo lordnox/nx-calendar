@@ -23,6 +23,7 @@
       "angular/angular.js",
       "angular-route/angular-route.js",
       "angular-ui-router/release/angular-ui-router.js",
+      "moment/moment.js",
       "angularjs-scope.safeapply/src/Scope.SafeApply.js"
     ],
     "main": [
