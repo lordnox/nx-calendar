@@ -6,7 +6,8 @@ module.exports = function(config) {
   conf.files = sharedConfig.preFiles.concat([
     //extra testing code
     'bower_components/angular-mocks/angular-mocks.js',
-
+    // angular-unit helpers
+    'test/lib/angular-unit.js',
     //mocha stuff
     'test/mocha.conf.js',
 

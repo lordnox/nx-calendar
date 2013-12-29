@@ -3,7 +3,6 @@ var module = angular.module('application', [
     'ui.router',
     'configuration',
     'Scope.safeApply',
-    'nx-calendar',
     'nx-calendar-demo',
   ])
 

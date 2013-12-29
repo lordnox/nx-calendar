@@ -1,19 +1,19 @@
 var app = angular.module('nx-calendar');
 
 var directiveDefinition = function directiveDefinition(directive) {
-  return [function() {
+  return function($compile) {
 
     return {
       restrict: 'A',
       scope: {
-        position: '=nxPosition'
+        posx: '=posX',
+        posy: '=posY'
       },
       link: function($scope, iElement, iAttrs) {
         var refresh = function refresh() {
-          console.log('REFRESH');
-          $scope.x = $scope.position.x;
-          $scope.y = $scope.position.y;
-          $scope.mode = ['%', 'percent'].indexOf($scope.position.mode) ? '%' : 'px';
+          $scope.x = $scope.posx;
+          $scope.y = $scope.posy;
+          $scope.mode = ['%', 'percent'].indexOf(iAttrs['nxPosition']) !== -1 ? '%' : 'px';
 
           if($scope.mode === '%') {
             $scope.x = Math.min(100, Math.max(0, $scope.x));
@@ -24,13 +24,13 @@ var directiveDefinition = function directiveDefinition(directive) {
             left    : $scope.x + "" + $scope.mode
           , top     : $scope.y + "" + $scope.mode
           });
-        }
+        };
 
-        $scope.$watch($scope.position, refresh);
+        $scope.$watch("posx", refresh);
+        $scope.$watch("posy", refresh);
       }
-
     };
-  }];
+  };
 };
 
 ['nxPosition'].map(function(directive) {

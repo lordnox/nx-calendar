@@ -5,6 +5,10 @@
     "angular-route": "1.2.1",
     "angular-mocks": "1.2.1",
     "angularjs-scope.safeapply": "*",
-    "angular-ui-router": "~0.2.0"
+    "angular-ui-router": "~0.2.0",
+    "moment": "~2.4.0"
+  },
+  "resolutions": {
+    "angular": "~1.2.4"
   }
 }

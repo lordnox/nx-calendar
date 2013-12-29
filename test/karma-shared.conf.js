@@ -39,7 +39,7 @@ module.exports = function() {
   return {
     basePath: '../',
     frameworks: ['mocha'],
-    reporters: ['progress'],
+    reporters: ['dots'],
     browsers: ['PhantomJS'],
     autoWatch: true,
 
