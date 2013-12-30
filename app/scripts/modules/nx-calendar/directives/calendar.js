@@ -6,7 +6,8 @@ var directiveDefinition = function directiveDefinition(directive) {
 
     return {
       scope: {
-        config: "=" + directive + "Config"
+        config: "=" + directive + "Config",
+        source: "=" + directive
       },
       controller: ['$scope', function($scope) {
       }],

@@ -3,7 +3,7 @@
 //
 describe("Unit: Testing Controllers", function() {
 
-  unit("nx-calendar", ["directive"])
+  unit("nx-calendar", ["directive"]);
 
   describe("nxPosition", function() {
     var fixtures = {
@@ -14,6 +14,7 @@ describe("Unit: Testing Controllers", function() {
     ;
 
     var scope;
+
     beforeEach(function() {
       scope = unit.scope();
     });

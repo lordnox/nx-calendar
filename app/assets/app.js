@@ -25717,7 +25717,7 @@ var directiveDefinition = function directiveDefinition(directive) {
       if(evt.hasOwnProperty('start') && evt.hasOwnProperty('end'))
         return evt.hasOwnProperty('summary');
       return false;
-    }
+    };
   })
 
 ;
@@ -25726,7 +25726,7 @@ var directiveDefinition = function directiveDefinition(directive) {
   .filter('isEventAfter', function(toMomentFilter) {
     return function(evt, time) {
       return toMomentFilter(evt).start.isAfter(time || moment());
-    }
+    };
   })
 
 ;
@@ -25735,7 +25735,7 @@ var directiveDefinition = function directiveDefinition(directive) {
   .filter('isEventBefore', function(toMomentFilter) {
     return function(evt, time) {
       return toMomentFilter(evt).end.isBefore(time || moment());
-    }
+    };
   })
 
 ;
@@ -25744,25 +25744,38 @@ var directiveDefinition = function directiveDefinition(directive) {
   .filter('isEventInRange', function(isEventBeforeFilter, isEventAfterFilter) {
     return function(evt, start, end) {
      return !isEventAfterFilter(evt, end) && !isEventBeforeFilter(evt, start);
-    }
+    };
   })
 
 ;
 ;var app = angular.module('nx-calendar')
 
-  .filter('isEventList', function() {
+  .filter('isEventList', function(isEventFilter) {
     return function(list) {
-      return angular.isArray(list);
-    }
+      return  angular.isArray(list)
+          &&  list.filter(isEventFilter).length === list.length;
+    };
   })
 
 ;
 ;var app = angular.module('nx-calendar')
 
-  .filter('isEventSource', function() {
+  .filter('isEventSource', function(isEventListFilter) {
+    var isFunction = function(cb) {
+      return typeof cb === "function";
+    }, isString = function(str) {
+      return typeof str === "string";
+    };
+
     return function(source) {
+      if(isEventListFilter(source))
+        return true;
+      if(isFunction(source) || (angular.isArray(source) && (source.length === source.filter(isFunction).length)))
+        return true;
+      if(isString(source) || (angular.isArray(source) && (source.length === source.filter(isString).length)))
+        return true;
       return false;
-    }
+    };
   })
 
 ;
@@ -25775,7 +25788,7 @@ var directiveDefinition = function directiveDefinition(directive) {
       if(!moment.isMoment(evt.end))
         evt.end = moment(evt.end);
       return evt;
-    }
+    };
   })
 
 ;
@@ -25814,7 +25827,14 @@ var directiveDefinition = function directiveDefinition(directive) {
       },
       config: config
     };
-  });angular.module('nx-calendar').provider('nxCalendarUtilities', function() {
+  });angular.module('nx-calendar').provider('nxEventSource', function() {
+  return {
+    $get: function() {
+      console.log("TEST");
+    }
+  };
+});
+console.log('installed');angular.module('nx-calendar').provider('nxCalendarUtilities', function() {
     var utils = {
       uuid: function() {
         // @TODO

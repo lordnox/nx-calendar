@@ -3,31 +3,13 @@
 //
 describe("Unit: Testing Filters", function() {
 
-  var module
-    , $rootScope
-    , $filter
-    ;
-
-  beforeEach(angular.mock.module('nx-calendar'));
-
-  beforeEach(function() {
-    module = angular.module('nx-calendar');
-  });
-
-  /* IMPORTANT!
-   * this is where we're setting up the $scope and
-   * calling the controller function on it, injecting
-   * all the important bits, like our mockService */
-  beforeEach(inject(function(_$rootScope_, _$filter_) {
-    $rootScope = _$rootScope_;
-    $filter = _$filter_;
-  }));
+  unit("nx-calendar", ["filter"]);
 
   describe("isEvent", function() {
     var filter;
 
     beforeEach(function() {
-      filter = $filter("isEvent");
+      filter = unit.filter("isEvent");
     });
 
     it("should exist", function() {
@@ -78,7 +60,7 @@ describe("Unit: Testing Filters", function() {
     var filter;
 
     beforeEach(function() {
-      filter = $filter("isEventAfter");
+      filter = unit.filter("isEventAfter");
     });
 
     it("should exist", function() {
@@ -113,7 +95,7 @@ describe("Unit: Testing Filters", function() {
     var filter;
 
     beforeEach(function() {
-      filter = $filter("isEventBefore");
+      filter = unit.filter("isEventBefore");
     });
 
     it("should exist", function() {
@@ -145,10 +127,11 @@ describe("Unit: Testing Filters", function() {
   });
 
   describe("isEventInRange", function() {
-    var filter;
+    var filter, time;
 
     beforeEach(function() {
-      filter = $filter("isEventInRange");
+      time = moment();
+      filter = unit.filter("isEventInRange");
     });
 
     it("should exist", function() {
@@ -156,7 +139,6 @@ describe("Unit: Testing Filters", function() {
     });
 
     it("should evaluate to false when the event ends before the range", function() {
-      var time = moment();
       var evt = {
         start: time.clone().subtract(2, 'second'),
         end: time.clone().subtract(1, 'second')
@@ -167,7 +149,6 @@ describe("Unit: Testing Filters", function() {
     });
 
     it("should evaluate to false when the event starts after the range", function() {
-      var time = moment();
       var evt = {
         start: time.clone().add(2, 'second'),
         end: time.clone().add(3, 'second')
@@ -178,7 +159,6 @@ describe("Unit: Testing Filters", function() {
     });
 
     it("should evaluate to true when the event starts and ends in the range", function() {
-      var time = moment();
       var evt = {
         start: time.clone(),
         end: time.clone().add(1, 'second')
@@ -189,7 +169,6 @@ describe("Unit: Testing Filters", function() {
     });
 
     it("should evaluate to true when the event ends in the range", function() {
-      var time = moment();
       var evt = {
         start: time.clone(),
         end: time.clone().add(2, 'second')
@@ -200,7 +179,6 @@ describe("Unit: Testing Filters", function() {
     });
 
     it("should evaluate to true when the event starts in the range", function() {
-      var time = moment();
       var evt = {
         start: time.clone().add(2, 'second'),
         end: time.clone().add(4, 'second')
@@ -215,7 +193,7 @@ describe("Unit: Testing Filters", function() {
     var filter;
 
     beforeEach(function() {
-      filter = $filter("isEventList");
+      filter = unit.filter("isEventList");
     });
 
     it("should exist", function() {
@@ -232,9 +210,16 @@ describe("Unit: Testing Filters", function() {
       filter('argh').should.not.be.ok;
     });
 
-    it("should work", function() {
-      // @TODO should check contents
+    it("should evaluate to true for an empty list", function() {
       filter([]).should.be.ok;
+    });
+
+    it("should evaluate to true if only events are in the list", function() {
+      filter([fixtures.googleCalendarEvent]).should.be.ok;
+    });
+
+    it("should evaluate to false if there is a not-event in the list", function() {
+      filter([123, fixtures.googleCalendarEvent]).should.not.be.ok;
     });
   });
 
@@ -242,7 +227,7 @@ describe("Unit: Testing Filters", function() {
     var filter;
 
     beforeEach(function() {
-      filter = $filter("isEventSource");
+      filter = unit.filter("isEventSource");
     });
 
     it("should exist", function() {
@@ -256,15 +241,31 @@ describe("Unit: Testing Filters", function() {
       filter(0).should.not.be.ok;
       filter(123).should.not.be.ok;
       filter(true).should.not.be.ok;
-      filter('argh').should.not.be.ok;
     });
+
+    it("should evaluate to true if its an eventlist", function() {
+      filter([]).should.be.ok;
+      filter([fixtures.googleCalendarEvent]).should.be.ok;
+    });
+
+    it("should evaluate to true if its a function or a list of functions", function() {
+      var cb = function() {};
+      filter(cb).should.be.ok;
+      filter([cb]).should.be.ok;
+    });
+
+    it("should evaluate to true if its a string or list of strings", function() {
+      filter('events').should.be.ok;
+      filter(['events', 'more events']).should.be.ok;
+    });
+
   });
 
   describe("toMoment", function() {
     var filter;
 
     beforeEach(function() {
-      filter = $filter("toMoment");
+      filter = unit.filter("toMoment");
     });
 
     it("should change a google-event to a moment-event", function() {

@@ -7,7 +7,7 @@ var app = angular.module('nx-calendar')
       if(evt.hasOwnProperty('start') && evt.hasOwnProperty('end'))
         return evt.hasOwnProperty('summary');
       return false;
-    }
+    };
   })
 
 ;

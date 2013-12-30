@@ -7,7 +7,7 @@ var app = angular.module('nx-calendar')
       if(!moment.isMoment(evt.end))
         evt.end = moment(evt.end);
       return evt;
-    }
+    };
   })
 
 ;
