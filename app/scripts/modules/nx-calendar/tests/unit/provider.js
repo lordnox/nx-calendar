@@ -110,7 +110,8 @@ describe("Unit: Testing Controllers", function() {
           // counter init
           var allCounter = unit.counter(),
               nameCounter = unit.counter();
-          scope.$on(provider.events().add, allCounter);
+
+          unit.provider('$rootScope').$on(provider.events().add, allCounter);
           scope.$on(eventname, nameCounter);
 
           allCounter.count.should.be.equal(0);
