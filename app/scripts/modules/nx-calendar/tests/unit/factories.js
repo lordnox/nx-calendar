@@ -1,7 +1,7 @@
 //
 // test/unit/controllers/controllersSpec.js
 //
-describe("Unit: Testing Filters", function() {
+xdescribe("Unit: Testing Filters", function() {
 
   unit("nx-calendar", ["provider"]);
 

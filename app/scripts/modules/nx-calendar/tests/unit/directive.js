@@ -43,7 +43,7 @@ describe("Unit: Testing Controllers", function() {
     });
 
     it("should set the mode correctly to %", function() {
-      unit.compile(fixtures["pxMode"], scope).html().should.not.be.equal(fixtures["pxMode"]);
+      unit.compile(fixtures.pxMode, scope).html().should.not.be.equal(fixtures.pxMode);
       var child = scope.$$childHead;
       child.mode.should.be.equal("%");
     });
@@ -71,7 +71,6 @@ describe("Unit: Testing Controllers", function() {
       child.x.should.be.equal(50);
       child.y.should.be.equal(100);
     });
-
   });
 
   describe("nxCalendar", function() {
@@ -108,13 +107,12 @@ describe("Unit: Testing Controllers", function() {
       s.substr(ps).should.be.equal(l.substr(pl));
     });
 
-    it("should have 3 comments", function() {
+    xit("should have 3 comments", function() {
       var html = unit.compile(definition).html();
       html.should.match(/<!-- ngSwitchWhen: day -->/);
       html.should.match(/<!-- ngSwitchWhen: month -->/);
       html.should.match(/<!-- ngSwitchWhen: events -->/);
     });
-
   });
 
   describe("nxCalendarDayView", function() {
@@ -123,13 +121,11 @@ describe("Unit: Testing Controllers", function() {
       , shortDef    = '<div nx-cal-day="" nx-cal-config="config"></div>'
       ;
 
-    var element, scope;
-
     it("should compile a div with attribute nx-calendar-day", function() {
       unit.compile(definition).html().should.not.be.equal(definition);
     });
 
-    it("should compile a div with attribute nx-cal-day", function() {
+    iit("should compile a div with attribute nx-cal-day", function() {
       unit.compile(shortDef).html().should.not.be.equal(shortDef);
     });
 
@@ -141,9 +137,7 @@ describe("Unit: Testing Controllers", function() {
         ;
       s.substr(ps).should.be.equal(l.substr(pl));
     });
-
   });
-
 });
 
 

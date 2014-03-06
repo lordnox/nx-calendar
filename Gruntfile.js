@@ -1,45 +1,6 @@
-
 var Path = require('path');
 
-var project = require('./project')
-  , bower = require('./bower');
-
-var base = '';
-
-var jsFiles = [], cssFiles = [], tplFiles = [];
-
-//@TODO: Read the bower.dependencies and generate the include list
-
-var addFiles = function(files, list, dir) {
-  var _base = base;
-  if(dir) _base = Path.join(base, dir);
-  list.forEach(function(file) {
-    var add = '';
-    if(file[0] === '!') {
-      add = '!';
-      file = file.substring(1);
-    }
-    files.push(add + Path.join(_base, file));
-
-  });
-};
-
-// first add bower files:
-addFiles(jsFiles, project.files.bower, project.bowerpath);
-
-// add 3rd party code
-addFiles(jsFiles, project.files["3rd"]);
-
-// add app files
-addFiles(jsFiles, project.files.app, project.apppath);
-
-// add app files
-addFiles(jsFiles, project.files.main, project.apppath);
-
-// add styles
-addFiles(cssFiles, project.files.styles);
-
-addFiles(tplFiles, project.files.templates);
+var project = require('./project');
 
 module.exports = function(grunt) {
 
@@ -48,21 +9,24 @@ module.exports = function(grunt) {
   grunt.initConfig({
     build: {
       templates: {
-        files: tplFiles
+        files: project.files.templates
       }
     },
 
     concat: {
       styles: {
         dest: './app/assets/app.css',
-        src: cssFiles
+        src: project.files.styles
       },
       scripts: {
         options: {
           separator: ';'
         },
         dest: './app/assets/app.js',
-        src: jsFiles
+        src: [].concat(
+          project.files.bower,
+          project.files.app
+        )
       },
       templates: {
         dest: project.templatesPath + '/templates.js',
@@ -72,7 +36,8 @@ module.exports = function(grunt) {
 
     connect: {
       options: {
-        base: 'app/'
+        base: 'app/',
+        livereload: true
       },
       webserver: {
         options: {
@@ -137,22 +102,6 @@ module.exports = function(grunt) {
       unit_auto: {
         configFile: './test/karma-unit.conf.js'
       },
-      midway: {
-        configFile: './test/karma-midway.conf.js',
-        autoWatch: false,
-        singleRun: true
-      },
-      midway_auto: {
-        configFile: './test/karma-midway.conf.js'
-      },
-      e2e: {
-        configFile: './test/karma-e2e.conf.js',
-        autoWatch: false,
-        singleRun: true
-      },
-      e2e_auto: {
-        configFile: './test/karma-e2e.conf.js'
-      }
     },
 
     open: {
@@ -161,6 +110,17 @@ module.exports = function(grunt) {
       },
       coverage: {
         path: 'http://localhost:' + project.server.coveragePort
+      }
+    },
+
+    preprocess: {
+      prod: {
+        src: "app/index.preprocess.html",
+        dest: "app/index.html"
+      },
+      dev: {
+        src: "app/index.preprocess.html",
+        dest: "app/index.html"
       }
     },
 
@@ -179,24 +139,38 @@ module.exports = function(grunt) {
       }
     },
 
+    stylus: {
+      compile: {
+        options: {
+          compress: false
+        },
+        files: {
+          'app/styles/calendar.css': ['app/styles/calendar.styl']
+        }
+      }
+    },
+
     watch: {
       assets: {
         files: ['app/styles/**/*.css','app/scripts/**'],
         tasks: ['module-templates', 'concat']
+      },
+      stylus: {
+        files: ['app/**/*.styl'],
+        tasks: ['stylus'],
+        options: {
+          livereload: true
+        }
       }
     }
   });
 
-  grunt.registerTask('test',        ['connect:testserver', 'karma:unit','karma:midway', 'karma:e2e']);
+  grunt.registerTask('test',        ['test:unit']);
   grunt.registerTask('test:unit',   ['karma:unit']);
-  grunt.registerTask('test:midway', ['connect:testserver', 'karma:midway']);
-  grunt.registerTask('test:e2e',    ['connect:testserver', 'karma:e2e']);
 
   //keeping these around for legacy use
   grunt.registerTask('autotest',        ['autotest:unit']);
-  grunt.registerTask('autotest:unit',   ['module-templates', 'connect:testserver','karma:unit_auto']);
-  grunt.registerTask('autotest:midway', ['connect:testserver','karma:midway_auto']);
-  grunt.registerTask('autotest:e2e',    ['connect:testserver','karma:e2e_auto']);
+  grunt.registerTask('autotest:unit',   ['module-templates', 'connect:testserver', 'karma:unit_auto']);
 
   //installation-related
   grunt.registerTask('install',   ['shell:npm_install', 'shell:bower_install', 'shell:font_awesome_fonts']);
@@ -232,11 +206,53 @@ module.exports = function(grunt) {
         dest:     project.templatesPath + '/template_' + module + '.js',
       };
     });
+
     // set the "better" config
     grunt.config.set('ngtemplates', ngtemplates);
 
     // when finished run the concatinations
     grunt.task.run(['ngtemplates', 'concat:templates']);
+  });
+
+  grunt.registerTask('process:prod', "Start the preprocess task as production", function() {
+    process.env.TASK = 'preprocess-prod';
+
+    var task = {
+      "appjs_hash"    : 'dist/assets/app.*.js',
+      "vendorjs_hash" : 'dist/assets/vendor.*.js',
+      "appcss_hash"   : 'dist/assets/app.*.css'
+    };
+
+    Object.keys(task).forEach(function(v) {
+      var file = grunt.file.expand(task[v])[0];
+      process.env[v] = Path.basename(file);
+    });
+
+    grunt.task.run('preprocess:prod');
+  });
+
+  grunt.registerTask('process:dev', "Start the preprocess task as development", function() {
+    process.env.TASK = 'preprocess-dev';
+
+    var base = "app/";
+
+    var js  = [].concat(
+          project.files.bower,
+          project.files.app
+        ),
+        css = [].concat(
+          project.files.styles
+        );
+
+    process.env.script_tags = grunt.file.expand(js).map(function(v) {
+      return "    <script src='" + (v.substr(base.length)) + "'></script>";
+    }).join("\n");
+
+    process.env.style_tags = grunt.file.expand(css).map(function(v) {
+      return "    <link rel=\"stylesheet\" type=\"text/css\" href=\"" + (v.substr(base.length)) + "\"/>";
+    }).join("\n");
+
+    grunt.task.run('preprocess:dev');
   });
 
 };

@@ -2,22 +2,53 @@ var $injector;
 
 angular.module('nx-calendar').provider('nxEventSource', function() {
 
-  var sourcemap;
+  var namespaces, self = {
 
+  /**
+   *  Internal configuration
+   **/
+    config: {
+      events: {
+        add   : 'nx-event-source-add',
+        remove: 'nx-event-source-remove',
+        update: 'nx-event-source-update'
+      }
+    }
+  };
+
+  // simlpe provide function to retrieve different parts of the system as needed
   var provide = function(provider) {
     return $injector.get(provider);
   };
 
-  var fnTrue = function() { return true; };
-
   var handler = [];
 
-  var broadcast = function(scope, type, events, name) {
-    scope.$broadcast(name, {
+  var broadcast = function(scope, type, events, namespace) {
+    if(!events.length) return;
+    scope.$broadcast(namespace, {
       type: type,
       events: events,
-      name: name
+      namespace: namespace
     });
+  };
+
+  /**
+   * creates a filter-function with a filter-parameter object
+   *  @param filter object with the parameters for the filter
+   *    - start & end used as a in-range filter
+   *    - namespace used as type filter
+   *  @return function
+   *    @param namespace for the namespace filter
+   *    @params event list of events to be filtered
+   **/
+  var createFilter = function(_filter) {
+    var range = provide('isRangeFilter')(_filter) && provide('nxRangeFilter')(_filter.start, _filter.end);
+
+    return function(namespace, events) {
+      if(_filter.namespace && namespace !== _filter.namespace)
+        return [];
+      return range ? events.filter(range) : events;
+    }
   }
 
   /**
@@ -27,37 +58,28 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
    *    - to many handlers are registered, the handler functions need to be very small
    *    - there are many small changes to the events, as this method needs to be called for every change
    **/
-  self.broadcast = function(type, events, name) {
+  self.broadcast = function(type, events, namespace) {
     // first broadcast in rootscope
     broadcast(provide('$rootScope'), type, events, type);
     // call each handler
     handler.forEach(function(handle) {
-      handle(name, events, type);
+      handle(type, events, namespace);
     });
   };
 
   /**
-   *  creates a new handler and adds it to the handler list
+   * creates a new handler and adds it to the handler list
+   *  @param scope $scope that will be used to broadcast the event
+   *  @param event string that will be used as eventname
+   *  @param [filter] filters used to reduce the events
    **/
   self.handler = function(scope, event, filter) {
-    // define filter function as accepting
-    var rangeFilter = fnTrue
-      , nameFilter = fnTrue
-      ;
-    // redefine if needs to be filtered
-    if(provide('isRangeFilter')(filter)) {
-      rangeFilter = provide('nxRangeFilter')(filter.start, filter.end);
-    }
-    // redefine if needs to be filtered
-    if(filter.name) {
-      nameFilter = function(name) { return name === filter.name; };
-    }
+    var filterFn = createFilter(filter);
+
     // create handle-fn to handle the filtering and broadcasting of the events
-    var handle = function handle(name, events, type) {
-      var publish = events.filter(rangeFilter);
-      if(nameFilter(name) &&  publish.length) {
-        broadcast(scope, type, publish, event);
-      };
+    var handle = function handle(type, events, namespace) {
+      var publish = filterFn(namespace, events);
+      broadcast(scope, type, publish, event);
     };
     // add handle-fn to list of handlers
     handler.push(handle);
@@ -68,73 +90,92 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
     };
   };
 
-  /**
-   *  Internal configuration
-   **/
-  self.config = {
-    events: {
-      add: 'nx-event-source-add',
-      remove: 'nx-event-source-remove',
-      update: 'nx-event-source-update'
-    },
-    default: 'nx-default-calendar'
-  };
-
   self.provider = {
-
+    // return all root-events
     events: function() { return self.config.events; },
-
-    clear: function() {
-      sourcemap = {};
-    },
-
-    defaultName: function(name) {
-      return name || self.config.default;
-    },
-
+    // reset the provider
+    clear: function() { namespaces = {}; },
+    // @DEBUG format an event for console output
     format: function(evt) {
       if(angular.isArray(evt)) return evt.map(self.provider.format);
       if(!provide('isEventFilter')(evt))return;
       var format = 'HH:mm:ss';
       console.log(evt.start.format(format), evt.end.format(format), evt.summary)
     },
-
-    register: function(name, source) {
-
-      if(typeof name !== 'string') {
-        source = name;
-        name = self.provider.defaultName();
+    /**
+     * register an eventsource into the provider
+     *  @param [name] a name the source should be found as
+     *  @param source the source data to be
+     *  @throws if source fails the isEventSource-filter
+     **/
+    register: function(namespace, source) {
+      if(typeof namespace !== 'string') {
+        source = namespace;
+        namespace = 0;
       }
 
       if(!angular.isArray(source))
         source = [source];
 
-      sourcemap[name] = (sourcemap[name] || []).concat(source);
+      if(!provide('isEventSourceFilter')(source))
+        throw new Error("Can't register event source" + (namespace ? " in '" + namespace + "'." : "."), {
+          source: source
+        });
 
-      self.broadcast(self.config.events.add, source, name);
+      namespaces[namespace] = (namespaces[namespace] || []).concat(source);
+      self.broadcast(self.config.events.add, source, namespace);
     },
 
-    subscribe: function(scope, event, filter) {
+    /**
+     * subscribes a scope to an event
+     *   registers an on-destroy handler to remove the generated handle from the scope
+     *  @param scope the scope the event should be registered in
+     *  @param event the name of the event that should be broadcasted
+     *  @param [filter] - object
+     *    - name property that will check if the events are in the correct namespace
+     *    - start&end properties will check if the events are in the range between start & end
+     *  @param [fn] callback that will be registered in the scope
+     **/
+    subscribe: function(scope, event, filter, fn) {
+      if(angular.isFunction(filter)) {
+        fn = filter;
+        filter = {};
+      }
       scope.$on('$destroy', self.handler(scope, event, filter || {}));
+      if(angular.isFunction(fn)) {
+        scope.$on(event, fn);
+      }
     },
 
-    get: function(name, start, end) {
-      if(moment.isMoment(name)) {
+    /**
+     * retrieves the sources via some filters
+     *  @param [namespace] the namespace to use
+     *  @param [start&end] start and end moment to filter the resulted events list
+     *  @return eventsources
+     **/
+    get: function(namespace, start, end) {
+      if(moment.isMoment(namespace)) {
         end = start;
-        start = name;
-        name = self.provider.defaultName();
+        start = namespace;
+        namespace = 0;
       } else {
-        name = self.provider.defaultName(name);
+        namespace = namespace || 0;
       }
-      var result = sourcemap.hasOwnProperty(name) ? sourcemap[name] : [];
+
+      var filter = {};
+      if(namespace) filter.namespace = namespace;
       if(moment.isMoment(start) && moment.isMoment(end)) {
-        result = result.filter(provide('nxRangeFilter')(start, end));
+        filter.start = start;
+        filter.end = end;
       }
-      return result;
+
+      var result = namespaces.hasOwnProperty(namespace) ? namespaces[namespace] : [];
+      return createFilter(filter)(namespace, result);
     }
 
   };
 
+  /** release the provider into the world **/
   self.$get = function(_$injector_) {
     $injector = _$injector_;
     self.provider.clear();

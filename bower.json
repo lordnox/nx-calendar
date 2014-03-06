@@ -1,14 +1,10 @@
 {
-  "name": "yom-angularjs-testing-article",
+  "name": "nx-calendar",
   "dependencies": {
-    "angular": "1.2.1",
-    "angular-route": "1.2.1",
-    "angular-mocks": "1.2.1",
-    "angularjs-scope.safeapply": "*",
-    "angular-ui-router": "~0.2.0",
-    "moment": "~2.4.0"
-  },
-  "resolutions": {
-    "angular": "~1.2.4"
+    "angular": "~1.2.14",
+    "angular-route": "~1.2.14",
+    "angular-mocks": "~1.2.14",
+    "angular-ui-router": "~0.2.9",
+    "moment": "~2.5.1"
   }
 }

@@ -1,7 +1,7 @@
 //
 // test/unit/controllers/controllersSpec.js
 //
-describe("Unit: Testing Filters", function() {
+xdescribe("Unit: Testing Filters", function() {
 
   unit("nx-calendar", ["filter"]);
 
@@ -258,7 +258,6 @@ describe("Unit: Testing Filters", function() {
       filter('events').should.be.ok;
       filter(['events', 'more events']).should.be.ok;
     });
-
   });
 
   describe("toMoment", function() {

@@ -1,22 +1,26 @@
-var sharedConfig = require('./karma-shared.conf');
+
+var project = require('../project');
+
+
 
 module.exports = function(config) {
-  var conf = sharedConfig();
+  var conf = {
+    basePath: '../',
+    frameworks: ['jasmine'],
+    reporters: ['dots', 'growl'],
+    browsers: ['PhantomJS'],
+    autoWatch: true,
 
-  conf.files = sharedConfig.preFiles.concat([
-    //extra testing code
-    'bower_components/angular-mocks/angular-mocks.js',
-    // angular-unit helpers
-    'test/lib/angular-unit.js',
-    //mocha stuff
-    'test/mocha.conf.js',
+    // these are default values anyway
+    singleRun: false,
+    colors: true,
 
-  ]).concat(sharedConfig.postFiles);
-
-  // sortierung der "files" ist nicht richtig...
-  // erst bibliotheken aus bower
-  // dann testing bibliotheken
-  // dann dateien
-
+    files : [].concat(
+      project.files.bower,
+      project.files.test.lib,
+      project.files.app,
+      project.files.test.post
+    )
+  };
   config.set(conf);
 };

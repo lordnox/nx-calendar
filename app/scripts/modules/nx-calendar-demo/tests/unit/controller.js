@@ -3,11 +3,10 @@
 //
 describe("Unit: Testing Controllers", function() {
 
-  var module
-    , $rootScope
+  var $rootScope
     , $controller
     , $scope
-    ;
+  ;
 
   var controller = function(ctrl, mock) {
    //create a scope object for us to use.
@@ -24,10 +23,6 @@ describe("Unit: Testing Controllers", function() {
   };
 
   beforeEach(angular.mock.module('nx-calendar-demo'));
-
-  beforeEach(function() {
-    module = angular.module('nx-calendar-demo');
-  });
 
   /* IMPORTANT!
    * this is where we're setting up the $scope and

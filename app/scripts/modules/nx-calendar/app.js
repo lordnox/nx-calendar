@@ -1,3 +1,5 @@
-var app = angular.module('nx-calendar', []);
+angular.module('nx-calendar', [
+  'configuration'
+]);
 
 
