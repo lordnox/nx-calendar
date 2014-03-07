@@ -17,8 +17,8 @@ app.controller('nx-calendar-day-controller', function($scope, nxCalendarUtilitie
   $scope.end = moment().endOf('day');
 
   $scope.setTimeslot = function(start, end) {
-    $scope.start = start;
-    $scope.end = end;
+    $scope.start  = start;
+    $scope.end    = end;
   };
 });
 

@@ -15,18 +15,22 @@ module.exports = function(grunt) {
 
     concat: {
       styles: {
-        dest: './app/assets/app.css',
+        dest: Path.join(project.buildpath, 'assets/app.css'),
         src: project.files.styles
       },
       scripts: {
         options: {
           separator: ';'
         },
-        dest: './app/assets/app.js',
-        src: [].concat(
-          project.files.bower,
-          project.files.app
-        )
+        dest: Path.join(project.buildpath, 'assets/app.js'),
+        src: project.files.app
+      },
+      vendor: {
+        options: {
+          separator: ';'
+        },
+        dest: Path.join(project.buildpath, 'assets/vendor.js'),
+        src: project.files.app
       },
       templates: {
         dest: project.templatesPath + '/templates.js',
@@ -76,12 +80,18 @@ module.exports = function(grunt) {
             expand: true,
             cwd: project.appbase,
             src: [
-              '**',
-              '!' + Path.join(project.assetspath, '**'),
-              '**/*.html'
+              '**/templates/*.html'
             ],
-            dest: Path.join(project.buildpath, project.client),
+            dest: project.buildpath,
           },
+          {
+            expand: true,
+            cwd: project.appbase,
+            src: [
+              'assets/*.css'
+            ],
+            dest: project.buildpath,
+          }
         ]
       }
     },
@@ -126,7 +136,7 @@ module.exports = function(grunt) {
     preprocess: {
       prod: {
         src: "app/index.preprocess.html",
-        dest: "app/index.html"
+        dest: Path.join(project.buildpath, "index.html")
       },
       dev: {
         src: "app/index.preprocess.html",
@@ -155,7 +165,7 @@ module.exports = function(grunt) {
           compress: false
         },
         files: {
-          'app/styles/calendar.css': ['app/styles/calendar.styl']
+          'app/styles/styles.css': ['app/styles/*.styl']
         }
       }
     },
@@ -192,7 +202,7 @@ module.exports = function(grunt) {
   //defaults
   grunt.registerTask('default',   ['dev']);
 
-  grunt.registerTask('build',     ['clean:build', 'copy:build']);
+  grunt.registerTask('build',     ['clean:build', 'concat:scripts', 'concat:vendor', 'copy:build', 'process:prod', 'copy:build']);
 
   //development
   grunt.registerTask('dev',       ['install', 'concat', 'connect:devserver', 'open:devserver', 'watch:assets']);
@@ -200,6 +210,9 @@ module.exports = function(grunt) {
   //development
   grunt.registerTask('dev-no',    ['install', 'concat', 'connect:devserver', 'watch:assets']);
   grunt.registerTask('dev-local', ['concat', 'connect:devserver', 'watch:assets']);
+
+  //preprocess
+  grunt.registerTask('process',   ['process:dev', 'process:prod']);
 
   //server daemon
   grunt.registerTask('serve',     ['connect:webserver']);
@@ -232,15 +245,17 @@ module.exports = function(grunt) {
     process.env.TASK = 'preprocess-prod';
 
     var task = {
-      "appjs_hash"    : 'dist/assets/app.*.js',
-      "vendorjs_hash" : 'dist/assets/vendor.*.js',
-      "appcss_hash"   : 'dist/assets/app.*.css'
+      "appjs_hash"    : Path.join(project.buildpath, 'assets/app.js'),
+      "vendorjs_hash" : Path.join(project.buildpath, 'assets/vendor.js'),
+      "appcss_hash"   : Path.join(project.buildpath, 'assets/app.css')
     };
 
     Object.keys(task).forEach(function(v) {
       var file = grunt.file.expand(task[v])[0];
       process.env[v] = Path.basename(file);
     });
+
+    console.log(process.env);
 
     grunt.task.run('preprocess:prod');
   });

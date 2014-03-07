@@ -15,12 +15,11 @@
     <!-- @endif -->
 
     <!-- @if TASK='preprocess-prod' -->
-    <link rel="stylesheet" type="text/css" href="assets/app.css" />
     <link rel="stylesheet" type="text/css" href="assets/<!-- @echo appcss_hash -->"/>
     <!-- @endif -->
   </head>
 
-  <body class="background-dark landing">
+  <body class="background-dark">
     <div id="page">
       <div id="nav" ui-view="navigation">
       </div>
@@ -42,7 +41,6 @@
     <!-- @if TASK='preprocess-prod' -->
     <script src="assets/<!-- @echo vendorjs_hash -->"></script>
     <script src="assets/<!-- @echo appjs_hash -->"></script>
-    <script src="./assets/app.js"></script>
     <!-- @endif -->
   </body>
 </html>

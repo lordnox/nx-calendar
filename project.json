@@ -42,9 +42,8 @@
       "app/bower_components/angular-ui-router/release/angular-ui-router.js"
     ],
     "styles": [
-      "app/styles/reset.css",
       "app/styles/app.css",
-      "app/styles/calendar.css"
+      "app/styles/styles.css"
     ],
     "templates": [
       "scripts/**/*.html"
