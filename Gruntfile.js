@@ -30,7 +30,7 @@ module.exports = function(grunt) {
           separator: ';'
         },
         dest: Path.join(project.buildpath, 'assets/vendor.js'),
-        src: project.files.app
+        src: project.files.bower
       },
       templates: {
         dest: project.templatesPath + '/templates.js',
@@ -91,6 +91,17 @@ module.exports = function(grunt) {
               'assets/*.css'
             ],
             dest: project.buildpath,
+          },
+          {
+            expand: true,
+            cwd: project.appbase,
+            src: [
+              '*/**',
+              '!bower_components/**',
+              '!scripts/**',
+              '!styles/**'
+            ],
+            dest: project.buildpath,
           }
         ]
       }
@@ -98,7 +109,7 @@ module.exports = function(grunt) {
 
     'gh-pages': {
       options: {
-        base: Path.join(project.buildpath, project.client)
+        base: project.buildpath
       },
       src: ['**']
     },
@@ -202,7 +213,7 @@ module.exports = function(grunt) {
   //defaults
   grunt.registerTask('default',   ['dev']);
 
-  grunt.registerTask('build',     ['clean:build', 'concat:scripts', 'concat:vendor', 'copy:build', 'process:prod', 'copy:build']);
+  grunt.registerTask('build',     ['clean:build', 'concat:styles', 'concat:scripts', 'concat:vendor', 'copy:build', 'process:prod', 'copy:build']);
 
   //development
   grunt.registerTask('dev',       ['install', 'concat', 'connect:devserver', 'open:devserver', 'watch:assets']);
@@ -245,9 +256,9 @@ module.exports = function(grunt) {
     process.env.TASK = 'preprocess-prod';
 
     var task = {
-      "appjs_hash"    : Path.join(project.buildpath, 'assets/app.js'),
-      "vendorjs_hash" : Path.join(project.buildpath, 'assets/vendor.js'),
-      "appcss_hash"   : Path.join(project.buildpath, 'assets/app.css')
+      "appjs_hash"    : Path.join(project.buildpath, 'assets/app.js')
+    , "vendorjs_hash" : Path.join(project.buildpath, 'assets/vendor.js')
+    , "appcss_hash"   : Path.join(project.buildpath, 'assets/app.css')
     };
 
     Object.keys(task).forEach(function(v) {
