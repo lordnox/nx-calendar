@@ -1,0 +1,22 @@
+var app = angular.module('nx-calendar');
+
+var directiveDefinition = function directiveDefinition(directive) {
+  return ['nxCalendarConfiguration', 'nxCalendarUtilities', function(configuration, utils) {
+    var template = configuration.template;
+
+    return {
+      scope: {},
+      controller: ['$scope', function($scope) {
+      }],
+      templateUrl: template('calendarEvents'),
+      link: function($scope, tElem, tAttrs) {
+      }
+    };
+  }];
+};
+
+['nxCalendarEvents', 'nxCalEvents'].map(function(directive) {
+  app.directive(directive, directiveDefinition(directive));
+})
+
+

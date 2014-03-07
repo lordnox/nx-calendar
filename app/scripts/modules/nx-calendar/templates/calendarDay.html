@@ -1,0 +1,40 @@
+<table class="table nx-calendar day-view">
+  <thead>
+    <th class="nx-calendar-first">
+      <dic class="nx-calendar-header-text">{{days[0] | moment:weekFormat}}</div>
+    </th>
+    <th ng-repeat="day in days" class="nx-calendar-header">
+      <div class="nx-calendar-header-text">{{day | moment:dayFormat}}</div>
+    </th>
+  </thead>
+<!--
+    @ days  Days that are visible
+    @ hours Hours that are already presented
+    @ skip  extra td's to be skipped
+  <tbody whole-day-view days="days" hours="hours" skip="1"></tbody>
+ -->
+  <tbody class="nx-calendar-colwrapper">
+    <tr>
+      <td class="nx-calendar-first"></td>
+      <td colspan="{{days.length}}" class="nx-calendar-spanningwrapper">
+        <div class="nx-calendar-tg-hourmarkers">
+          <div class="nx-calendar-tg-markercell" ng-repeat="hour in hours">
+            <div class="nx-calendar-tg-dualmarker"></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td class="nx-calendar-first nx-calendar-tg-hours">
+        <div class="nx-calendar-tg-hour-inner" ng-repeat="hour in hours">
+          <div class="nx-calendar-tg-hour-clock">{{hour | moment:timeFormat}}</div>
+        </div>
+      </td>
+      <td ng-repeat="day in days" class="nx-calendar-tg-day-container">
+        <hour-view-event-container day="day" hours="hours"></hour-view-event-container>
+      </td>
+    </tr>
+  </tbody>
+</table>
