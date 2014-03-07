@@ -48,6 +48,9 @@
     ],
     "templates": [
       "scripts/**/*.html"
+    ],
+    "tests": [
+      "app/**/tests/**/*.js"
     ]
   }
 }

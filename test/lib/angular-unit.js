@@ -1,39 +1,14 @@
-var $injected = {}, $injector;
-
-var Types = {
-  controller: {
-    preInject: ['define-module', 'load-module'],
-    inject: [],
-    postInject: []
-  },
-  provider: {
-    preInject: ['define-module', 'load-module'],
-    inject: [],
-    postInject: []
-  },
-  directive: {
-    preInject: ['define-module', 'load-module'],
-    inject: [],
-    postInject: []
-  },
-  filter: {
-    preInject: ['define-module', 'load-module'],
-    inject: [],
-    postInject: []
-  }
-};
+var $injector;
 
 var noop = function() {};
 
-var unit = function(module, types) {
-
-  types = types || Object.keys(Types);
-  console.log('Unit-Testing: ' + module, types);
+var unit = function(module) {
 
   beforeEach(function() {
     unit.module = angular.mock.module(module);
     angular.module(module);
   });
+
   beforeEach(inject(function(_$injector_) {
     $injector = _$injector_;
   }));

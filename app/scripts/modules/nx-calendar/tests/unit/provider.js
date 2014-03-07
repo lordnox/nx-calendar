@@ -2,9 +2,9 @@
 // test/unit/controllers/controllersSpec.js
 //
 
-xdescribe("Unit: Testing Controllers", function() {
+describe("Unit: Testing Controllers", function() {
 
-  unit("nx-calendar", ["provider"]);
+  unit("nx-calendar");
 
   var fixtures = {
     name: 'myEvents',
@@ -13,7 +13,7 @@ xdescribe("Unit: Testing Controllers", function() {
         summary: summary,
         start: time.clone().subtract(1, 'second'),
         end: time.clone()
-      }
+      };
     },
     events: function(time) {
       return [
@@ -22,7 +22,7 @@ xdescribe("Unit: Testing Controllers", function() {
         fixtures.event('after', time.clone().add(10, 'seconds'))
       ];
     }
-  }
+  };
 
   describe("nx-calendar-providers", function() {
 
@@ -62,7 +62,6 @@ xdescribe("Unit: Testing Controllers", function() {
         it("should get all events in a range", function() {
           provider.get(fixtures.name, time.clone().subtract(1, 'second'), time.clone().add(3, 'second')).should.have.length(1);
         });
-
       });
 
       describe("registering", function() {
@@ -108,11 +107,6 @@ xdescribe("Unit: Testing Controllers", function() {
         });
 
         it("should be able to subscribe to events in a range", function() {
-
-          var start = time.clone(),
-              end = time.clone().add(4, 'seconds')
-              ;
-
           var evt = {
             summary: "Test-Event 1",
             start: time.clone().add(1, 'second'),
@@ -204,12 +198,8 @@ xdescribe("Unit: Testing Controllers", function() {
           provider.register("named", evts.named);
 
           assertCounters({ filtered: 1, unfiltered: 3});
-
         });
       });
-
     });
-
   });
-
 });

@@ -1,9 +1,10 @@
 //
 // test/unit/controllers/controllersSpec.js
 //
-describe("Unit: Testing Controllers", function() {
 
-  unit("nx-calendar", ["directive"]);
+describe("Unit: Testing Directives", function() {
+
+  unit("nx-calendar");
 
   describe("nxPosition", function() {
     var fixtures = {
@@ -107,7 +108,7 @@ describe("Unit: Testing Controllers", function() {
       s.substr(ps).should.be.equal(l.substr(pl));
     });
 
-    xit("should have 3 comments", function() {
+    it("should have 3 comments", function() {
       var html = unit.compile(definition).html();
       html.should.match(/<!-- ngSwitchWhen: day -->/);
       html.should.match(/<!-- ngSwitchWhen: month -->/);
@@ -125,7 +126,7 @@ describe("Unit: Testing Controllers", function() {
       unit.compile(definition).html().should.not.be.equal(definition);
     });
 
-    iit("should compile a div with attribute nx-cal-day", function() {
+    it("should compile a div with attribute nx-cal-day", function() {
       unit.compile(shortDef).html().should.not.be.equal(shortDef);
     });
 

@@ -96,11 +96,21 @@ module.exports = function(grunt) {
     karma: {
       unit: {
         configFile: './test/karma-unit.conf.js',
-        autoWatch: false,
-        singleRun: true
+        autoWatch : false,
+        singleRun : true,
+        options   : {
+          files     : [].concat(
+            project.files.bower,
+            project.files.test.lib,
+            project.files.app,
+            project.files.test.post,
+            project.files.tests
+          )
+        }
       },
       unit_auto: {
-        configFile: './test/karma-unit.conf.js'
+        configFile: './test/karma-unit.conf.js',
+        options     : '<%= karma.unit.options %>'
       },
     },
 
@@ -161,6 +171,10 @@ module.exports = function(grunt) {
         options: {
           livereload: true
         }
+      },
+      templates: {
+        files: ['app/**/*.html'],
+        tasks: ['module-templates']
       }
     }
   });
@@ -253,6 +267,12 @@ module.exports = function(grunt) {
     }).join("\n");
 
     grunt.task.run('preprocess:dev');
+  });
+
+  grunt.registerTask('xxx', function() {
+    var files = grunt.config('karma.unit.options.files');
+
+    console.log(grunt.file.expand(files));
   });
 
 };

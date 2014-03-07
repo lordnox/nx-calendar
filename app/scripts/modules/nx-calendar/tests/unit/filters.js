@@ -1,9 +1,10 @@
 //
 // test/unit/controllers/controllersSpec.js
 //
-xdescribe("Unit: Testing Filters", function() {
 
-  unit("nx-calendar", ["filter"]);
+describe("Unit: Testing Filters", function() {
+
+  unit("nx-calendar");
 
   describe("isEvent", function() {
     var filter;
@@ -72,7 +73,7 @@ xdescribe("Unit: Testing Filters", function() {
         start: moment().add(1, 'second')
       };
       filter(evt).should.be.ok;
-    })
+    });
 
     it("should evaluate to true when the start time is before the time", function() {
       var time = moment();
@@ -107,7 +108,7 @@ xdescribe("Unit: Testing Filters", function() {
         end: moment().subtract(1, 'second')
       };
       filter(evt).should.be.ok;
-    })
+    });
 
     it("should evaluate to true when the end time is before the time", function() {
       var time = moment();
@@ -374,4 +375,6 @@ fixtures.wrongEvents = {
     "start": moment(),
     "end": moment()
   },
-}
+};
+
+

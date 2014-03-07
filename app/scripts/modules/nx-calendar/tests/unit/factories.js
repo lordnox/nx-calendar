@@ -1,9 +1,10 @@
 //
 // test/unit/controllers/controllersSpec.js
 //
-xdescribe("Unit: Testing Filters", function() {
 
-  unit("nx-calendar", ["provider"]);
+describe("Unit: Testing Filters", function() {
+
+  unit("nx-calendar");
 
   describe("nxRangeFilter", function() {
     var provider, time;

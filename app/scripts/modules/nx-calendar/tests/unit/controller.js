@@ -1,7 +1,8 @@
 //
 // test/unit/controllers/controllersSpec.js
 //
-xdescribe("Unit: Testing Controllers", function() {
+
+describe("Unit: Testing Controllers", function() {
 
   var $rootScope
     , $controller
