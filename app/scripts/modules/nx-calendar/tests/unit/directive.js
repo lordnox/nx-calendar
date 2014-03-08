@@ -116,10 +116,10 @@ describe("Unit: Testing Directives", function() {
     });
   });
 
-  describe("nxCalendarDayView", function() {
+  describe("nxCalendarDays", function() {
 
-    var definition  = '<div nx-calendar-day="" nx-cal-config="config"></div>'
-      , shortDef    = '<div nx-cal-day="" nx-cal-config="config"></div>'
+    var definition  = '<div nx-calendar-days="" nx-cal-config="config"></div>'
+      , shortDef    = '<div nx-cal-days="" nx-cal-config="config"></div>'
       ;
 
     it("should compile a div with attribute nx-calendar-day", function() {
@@ -137,6 +137,15 @@ describe("Unit: Testing Directives", function() {
         , pl = definition.indexOf(">")
         ;
       s.substr(ps).should.be.equal(l.substr(pl));
+    });
+
+    it("should compile a div with attribute nx-cal-day", function() {
+      var scope = unit.scope();
+      scope.config = {
+        test: 123
+      };
+      //console.log(shortDef)
+      unit.compile(shortDef, scope).html().should.not.be.equal(shortDef);
     });
   });
 });

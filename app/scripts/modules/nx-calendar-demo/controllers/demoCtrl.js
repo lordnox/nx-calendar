@@ -26,6 +26,13 @@ app.run(function() {
 });
 
 app.controller('demoCtrl', function($scope) {
-  $scope.events = data.events;
-  $scope.eventSource = data.eventSource;
+  $scope.events       = data.events;
+  $scope.eventSource  = data.eventSource;
+
+  $scope.config = {
+    week: {
+      days: 7,
+      day: moment().day(1)
+    }
+  };
 });

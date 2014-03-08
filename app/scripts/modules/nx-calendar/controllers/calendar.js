@@ -9,6 +9,5 @@ angular.module('nx-calendar')
     if(views.indexOf($scope.view) === -1) {
       $scope.view = views[0];
     }
-
   })
 ;

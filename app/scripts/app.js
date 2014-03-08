@@ -1,5 +1,5 @@
 
-var module = angular.module('application', [
+angular.module('application', [
     'ui.router',
     'configuration',
     'nx-calendar-demo',
@@ -34,7 +34,4 @@ var module = angular.module('application', [
   .controller('appCtrl', function($scope) {
     $scope.title = 'Raynode - nx-calendar directive demo';
   })
-
 ;
-
-//window.App = module;

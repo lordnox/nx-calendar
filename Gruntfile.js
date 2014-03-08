@@ -228,6 +228,9 @@ module.exports = function(grunt) {
   //server daemon
   grunt.registerTask('serve',     ['connect:webserver']);
 
+  //github pages
+  grunt.registerTask('ghp',       ['gh-pages-clean', 'gh-pages']);
+
   grunt.registerTask("module-templates", "Create templates for all modules seperately", function() {
     // read the current config
     var ngtemplates = grunt.config.get('ngtemplates') || {};
@@ -266,23 +269,21 @@ module.exports = function(grunt) {
       process.env[v] = Path.basename(file);
     });
 
-    console.log(process.env);
-
     grunt.task.run('preprocess:prod');
   });
 
   grunt.registerTask('process:dev', "Start the preprocess task as development", function() {
     process.env.TASK = 'preprocess-dev';
 
-    var base = "app/";
-
-    var js  = [].concat(
+    var base = "app/"
+      , js  = [].concat(
           project.files.bower,
           project.files.app
-        ),
-        css = [].concat(
+        )
+      , css = [].concat(
           project.files.styles
-        );
+        )
+      ;
 
     process.env.script_tags = grunt.file.expand(js).map(function(v) {
       return "    <script src='" + (v.substr(base.length)) + "'></script>";

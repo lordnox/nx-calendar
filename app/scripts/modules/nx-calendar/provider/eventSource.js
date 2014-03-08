@@ -16,7 +16,7 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
     }
   };
 
-  // simlpe provide function to retrieve different parts of the system as needed
+  // simple provide function to retrieve different parts of the system as needed
   var provide = function(provider) {
     return $injector.get(provider);
   };

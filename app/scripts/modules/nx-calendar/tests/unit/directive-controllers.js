@@ -32,31 +32,64 @@ describe("Unit: Testing Directives Controllers", function() {
     $controller = _$controller_;
   }));
 
-  describe("nx-calendar-day-controller", function() {
+  describe("nx-calendar-days-controller", function() {
     var scope, mock;
 
-    beforeEach(function() {
-      scope = $rootScope.$new();
-      mock  = { $scope: scope };
+    describe("basics", function() {
+      beforeEach(function() {
+        scope = $rootScope.$new();
+        mock  = { $scope: scope };
+      });
+
+      it("should have a configuration filled with defaults", function() {
+        controller('nx-calendar-days-controller', mock);
+        scope.should.have.property('timeFormat');
+        scope.should.have.property('weekFormat');
+        scope.should.have.property('dayFormat');
+        scope.should.have.property('hours');
+        scope.should.have.property('days');
+      });
+
+      it("should have some methods", function() {
+        controller('nx-calendar-days-controller', mock);
+        console.log('directive-controllers.js: -> Test the impact of modifying the range of the controller');
+      });
     });
 
-    it("should have a configuration filled with defaults", function() {
-      controller('nx-calendar-day-controller', mock);
-      scope.should.have.property('timeFormat');
-      scope.should.have.property('weekFormat');
-      scope.should.have.property('dayFormat');
-      scope.should.have.property('days');
-      scope.should.have.property('hours');
-      scope.should.have.property('start');
-      scope.should.have.property('end');
+    describe("without configuration", function() {
+      it("should create the controller", function() {
+        scope = $rootScope.$new();
+        mock  = { $scope: scope };
+        controller('nx-calendar-days-controller', mock);
+      });
+
+      it("should have a days.length of 1", function() {
+        scope.days.should.have.length(1);
+      });
     });
 
-    it("should have some methods", function() {
-      controller('nx-calendar-day-controller', mock);
-      scope.should.have.property('setTimeslot');
+    ddescribe("with configuration", function() {
+      it("should create the controller", function() {
+        scope = $rootScope.$new();
+        scope.config = {
+          days: 3,
+          day: moment().add(2, 'days')
+        };
+        mock  = { $scope: scope };
+        controller('nx-calendar-days-controller', mock);
+      });
+
+      it("should have a days.length of 1", function() {
+        scope.days.should.have.length(3);
+      });
+
+      it("should start on the day after tomorrow", function() {
+        scope.days[0].isSame(moment().add(2, 'days'), 'day').should.be.true;
+        scope.days[1].isSame(moment().add(3, 'days'), 'day').should.be.true;
+        scope.days[2].isSame(moment().add(4, 'days'), 'day').should.be.true;
+      });
     });
   });
-
 });
 
 
