@@ -113,16 +113,17 @@ var app = angular.module('nx-calendar-demo');
 
 var data = {};
 
-app.run(function() {
+app.run(function(nxEventSource) {
   var date = new Date();
+  var cid = 10;
   var d = date.getDate();
   var m = date.getMonth();
   var y = date.getFullYear();
   /* event source that pulls from google.com */
   data.eventSource = {
-          url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic",
-          className: 'gcal-event',           // an option!
-          currentTimezone: 'America/Chicago' // an option!
+    url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic",
+    className: 'gcal-event',           // an option!
+    currentTimezone: 'America/Chicago' // an option!
   };
   /* event source that contains custom events on the scope */
   data.events = [
@@ -132,12 +133,35 @@ app.run(function() {
     {id: 999,title: 'Repeating Event',start: new Date(y, m, d + 4, 16, 0),allDay: false},
     {title: 'Birthday Party',start: new Date(y, m, d + 1, 19, 0),end: new Date(y, m, d + 1, 22, 30),allDay: false},
     {title: 'Click for Google',start: new Date(y, m, 28),end: new Date(y, m, 29),url: 'http://google.com/'}
-  ];
+  ].map(function(item) {
+    return {
+      start: moment(item.start),
+      end: moment(item.end),
+      title: item.title,
+      id: item.id || (item.id = cid++),
+      summary: item.id + ' ---- ' + item.title
+    };
+  });
+
+
+  nxEventSource.register(data.events);
 });
 
 app.controller('demoCtrl', function($scope) {
-  $scope.events = data.events;
-  $scope.eventSource = data.eventSource;
+  $scope.events       = data.events;
+  $scope.eventSource  = data.eventSource;
+
+  $scope.config = {
+    week: {
+      dayFormat: 'Do dddd',
+      days: 7,
+      day: moment().add(-1, 'days').day(1)
+    },
+    day: {
+      start: 7,
+      end: 22
+    }
+  };
 });;
 var views = ['day', 'month', 'events'];
 
@@ -149,7 +173,6 @@ angular.module('nx-calendar')
     if(views.indexOf($scope.view) === -1) {
       $scope.view = views[0];
     }
-
   })
 ;;var app = angular.module('nx-calendar');
 
@@ -175,49 +198,6 @@ var directiveDefinition = function directiveDefinition(directive) {
 ['nxCalendar', 'nxCal'].map(function(directive) {
   app.directive(directive, directiveDefinition(directive));
 })
-;var app = angular.module('nx-calendar');
-
-app.controller('nx-calendar-day-controller', function($scope, nxCalendarUtilities) {
-  $scope.timeFormat   = 'HH:mm';
-  $scope.dayFormat    = 'dddd';
-  $scope.weekFormat   = 'wo';
-  $scope.hours = nxCalendarUtilities.range(7, 20, function(hour) {
-    return moment().hour(hour).minute(0);
-  });
-  $scope.days = nxCalendarUtilities.range(7).map(function(day) {
-    return {
-      events: function() { return []; },
-      moment: moment().day(day + 1)
-    };
-  });
-  $scope.start = moment().startOf('day');
-  $scope.end = moment().endOf('day');
-
-  $scope.setTimeslot = function(start, end) {
-    $scope.start  = start;
-    $scope.end    = end;
-  };
-});
-
-
-var directiveDefinition = function directiveDefinition() {
-  return function(nxCalendarConfiguration) {
-    var template = nxCalendarConfiguration.template;
-
-    return {
-      scope: {},
-      controller: 'nx-calendar-day-controller',
-      templateUrl: template('calendarDay'),
-      // link: function(scope) {}
-    };
-  };
-};
-
-['nxCalendarDay', 'nxCalDay'].map(function(directive) {
-  app.directive(directive, directiveDefinition(directive));
-});
-
-
 ;var app = angular.module('nx-calendar');
 
 var directiveDefinition = function directiveDefinition(directive) {
@@ -326,6 +306,71 @@ var directiveDefinition = function directiveDefinition(directive) {
 ['nxCalendarDayWholeEvent', 'nxCalDayWholeEvent'].map(function(directive) {
   app.directive(directive, directiveDefinition(directive));
 })
+
+
+;var app = angular.module('nx-calendar');
+
+app.controller('nx-calendar-days-controller', function($scope, nxCalendarUtilities, nxEventSource) {
+
+  var config = angular.extend({
+    start       : 0 // first hour of the day
+  , end         : 24  // last hour of the day
+  , timeFormat  : 'HH:mm'
+  , dayFormat   : 'dddd'
+  , weekFormat  : 'wo'
+  , day         : moment()
+  , days        : 1
+  }, $scope.config || {});
+
+  config.day = moment(config.day);
+
+  $scope.timeFormat = config.timeFormat;
+  $scope.dayFormat  = config.dayFormat;
+  $scope.weekFormat = config.weekFormat;
+  $scope.events     = [];
+
+  $scope.hours = nxCalendarUtilities.range(config.start, config.end, function(hour) {
+    return moment().hour(hour).minute(0);
+  });
+
+  $scope.days = nxCalendarUtilities.range(config.days).map(function(day) {
+    return config.day.clone().add(day, 'day').startOf('day');
+  });
+
+  var filter = {
+    start : $scope.days[0],
+    end   : $scope.days[$scope.days.length - 1].clone().endOf('day')
+  };
+  if(config.source) filter.namespace = config.source;
+
+
+  nxEventSource.subscribe($scope, null, filter, function($evt, data) {
+    $scope.events = data.events;
+    console.log('nxEventSource - Events');
+    $scope.events.map(function(evt) {
+      console.log(nxEventSource.format(evt))
+    });
+  });
+});
+
+
+var directiveDefinition = function directiveDefinition() {
+  return function(nxCalendarConfiguration) {
+    var template  = nxCalendarConfiguration.template;
+
+    return {
+      scope: {
+        config: '=nxCalConfig'
+      },
+      controller: 'nx-calendar-days-controller',
+      templateUrl: template('calendarDays')
+    };
+  };
+};
+
+['nxCalendarDays', 'nxCalDays'].map(function(directive) {
+  app.directive(directive, directiveDefinition(directive));
+});
 
 
 ;var app = angular.module('nx-calendar');
@@ -466,12 +511,9 @@ var directiveDefinition = function directiveDefinition(directive) {
   })
 
 ;
-;var app = angular.module('nx-calendar')
-
+;angular.module('nx-calendar')
   .filter('isEventSource', function(isEventListFilter) {
-    var isString = function(str) {
-      return typeof str === "string";
-    };
+    var isString = angular.isString;
 
     return function(source) {
       if(isEventListFilter(source))
@@ -573,7 +615,7 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
     }
   };
 
-  // simlpe provide function to retrieve different parts of the system as needed
+  // simple provide function to retrieve different parts of the system as needed
   var provide = function(provider) {
     return $injector.get(provider);
   };
@@ -605,13 +647,13 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
       if(_filter.namespace && namespace !== _filter.namespace)
         return [];
       return range ? events.filter(range) : events;
-    }
-  }
+    };
+  };
 
   /**
    *  Broadcast any event changes
-   *  @IMPRTANT
-   *    This method might blow up when
+   *  @IMPORTANT
+   *  This method might blow up when
    *    - to many handlers are registered, the handler functions need to be very small
    *    - there are many small changes to the events, as this method needs to be called for every change
    **/
@@ -632,19 +674,24 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
    **/
   self.handler = function(scope, event, filter) {
     var filterFn = createFilter(filter);
-
     // create handle-fn to handle the filtering and broadcasting of the events
     var handle = function handle(type, events, namespace) {
       var publish = filterFn(namespace, events);
       broadcast(scope, type, publish, event);
     };
+    // return remove-fn
+    handle.remove = function remove() {
+      // remove handle-fn from list of handlers
+      handler = handler.filter(function(item) {
+        return handle !== item;
+      });
+    };
     // add handle-fn to list of handlers
     handler.push(handle);
-    // return remove-fn
-    return function remove() {
-      // remove handle-fn from list of handlers
-      handler = handler.filter(function(item) {return handle !== item; });
-    };
+    // add clean-up
+    scope.$on('$destroy', handle.remove);
+
+    return handle;
   };
 
   self.provider = {
@@ -656,8 +703,8 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
     format: function(evt) {
       if(angular.isArray(evt)) return evt.map(self.provider.format);
       if(!provide('isEventFilter')(evt))return;
-      var format = 'HH:mm:ss';
-      console.log(evt.start.format(format), evt.end.format(format), evt.summary)
+      var format = 'DD.MM.YYYY HH:mm:ss';
+      console.log(evt.start.format(format), evt.end.format(format), evt.summary);
     },
     /**
      * register an eventsource into the provider
@@ -667,8 +714,9 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
      **/
     register: function(namespace, source) {
       if(typeof namespace !== 'string') {
-        source = namespace;
-        namespace = 0;
+        var tmp = source;
+        source    = namespace;
+        namespace = tmp || 0;
       }
 
       if(!angular.isArray(source))
@@ -678,7 +726,6 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
         throw new Error("Can't register event source" + (namespace ? " in '" + namespace + "'." : "."), {
           source: source
         });
-
       namespaces[namespace] = (namespaces[namespace] || []).concat(source);
       self.broadcast(self.config.events.add, source, namespace);
     },
@@ -689,19 +736,23 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
      *  @param scope the scope the event should be registered in
      *  @param event the name of the event that should be broadcasted
      *  @param [filter] - object
-     *    - name property that will check if the events are in the correct namespace
+     *    - namespace property that will check if the events are in the correct namespace
      *    - start&end properties will check if the events are in the range between start & end
      *  @param [fn] callback that will be registered in the scope
      **/
     subscribe: function(scope, event, filter, fn) {
       if(angular.isFunction(filter)) {
-        fn = filter;
-        filter = {};
+        fn      = filter;
+        filter  = {};
       }
-      scope.$on('$destroy', self.handler(scope, event, filter || {}));
+      event = event || self.config.events.update;
+      var handle = self.handler(scope, event, filter || {});
       if(angular.isFunction(fn)) {
         scope.$on(event, fn);
       }
+      Object.keys(namespaces).forEach(function(namespace) {
+        handle(self.config.events.add, namespaces[namespace], namespace);
+      });
     },
 
     /**
@@ -774,7 +825,7 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
   })
 ;
 ;
-var module = angular.module('application', [
+angular.module('application', [
     'ui.router',
     'configuration',
     'nx-calendar-demo',
@@ -809,7 +860,4 @@ var module = angular.module('application', [
   .controller('appCtrl', function($scope) {
     $scope.title = 'Raynode - nx-calendar directive demo';
   })
-
 ;
-
-//window.App = module;
