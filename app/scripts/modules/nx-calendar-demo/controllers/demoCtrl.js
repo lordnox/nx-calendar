@@ -3,16 +3,17 @@ var app = angular.module('nx-calendar-demo');
 
 var data = {};
 
-app.run(function() {
+app.run(function(nxEventSource) {
   var date = new Date();
+  var cid = 10;
   var d = date.getDate();
   var m = date.getMonth();
   var y = date.getFullYear();
   /* event source that pulls from google.com */
   data.eventSource = {
-          url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic",
-          className: 'gcal-event',           // an option!
-          currentTimezone: 'America/Chicago' // an option!
+    url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic",
+    className: 'gcal-event',           // an option!
+    currentTimezone: 'America/Chicago' // an option!
   };
   /* event source that contains custom events on the scope */
   data.events = [
@@ -22,7 +23,18 @@ app.run(function() {
     {id: 999,title: 'Repeating Event',start: new Date(y, m, d + 4, 16, 0),allDay: false},
     {title: 'Birthday Party',start: new Date(y, m, d + 1, 19, 0),end: new Date(y, m, d + 1, 22, 30),allDay: false},
     {title: 'Click for Google',start: new Date(y, m, 28),end: new Date(y, m, 29),url: 'http://google.com/'}
-  ];
+  ].map(function(item) {
+    return {
+      start: moment(item.start),
+      end: moment(item.end),
+      title: item.title,
+      id: item.id || (item.id = cid++),
+      summary: item.id + ' ---- ' + item.title
+    };
+  });
+
+
+  nxEventSource.register(data.events);
 });
 
 app.controller('demoCtrl', function($scope) {
@@ -31,8 +43,13 @@ app.controller('demoCtrl', function($scope) {
 
   $scope.config = {
     week: {
+      dayFormat: 'Do dddd',
       days: 7,
-      day: moment().day(1)
+      day: moment().add(-1, 'days').day(1)
+    },
+    day: {
+      start: 7,
+      end: 22
     }
   };
 });

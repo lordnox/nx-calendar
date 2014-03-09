@@ -48,13 +48,13 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
       if(_filter.namespace && namespace !== _filter.namespace)
         return [];
       return range ? events.filter(range) : events;
-    }
-  }
+    };
+  };
 
   /**
    *  Broadcast any event changes
-   *  @IMPRTANT
-   *    This method might blow up when
+   *  @IMPORTANT
+   *  This method might blow up when
    *    - to many handlers are registered, the handler functions need to be very small
    *    - there are many small changes to the events, as this method needs to be called for every change
    **/
@@ -75,19 +75,24 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
    **/
   self.handler = function(scope, event, filter) {
     var filterFn = createFilter(filter);
-
     // create handle-fn to handle the filtering and broadcasting of the events
     var handle = function handle(type, events, namespace) {
       var publish = filterFn(namespace, events);
       broadcast(scope, type, publish, event);
     };
+    // return remove-fn
+    handle.remove = function remove() {
+      // remove handle-fn from list of handlers
+      handler = handler.filter(function(item) {
+        return handle !== item;
+      });
+    };
     // add handle-fn to list of handlers
     handler.push(handle);
-    // return remove-fn
-    return function remove() {
-      // remove handle-fn from list of handlers
-      handler = handler.filter(function(item) {return handle !== item; });
-    };
+    // add clean-up
+    scope.$on('$destroy', handle.remove);
+
+    return handle;
   };
 
   self.provider = {
@@ -99,8 +104,8 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
     format: function(evt) {
       if(angular.isArray(evt)) return evt.map(self.provider.format);
       if(!provide('isEventFilter')(evt))return;
-      var format = 'HH:mm:ss';
-      console.log(evt.start.format(format), evt.end.format(format), evt.summary)
+      var format = 'DD.MM.YYYY HH:mm:ss';
+      console.log(evt.start.format(format), evt.end.format(format), evt.summary);
     },
     /**
      * register an eventsource into the provider
@@ -110,8 +115,9 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
      **/
     register: function(namespace, source) {
       if(typeof namespace !== 'string') {
-        source = namespace;
-        namespace = 0;
+        var tmp = source;
+        source    = namespace;
+        namespace = tmp || 0;
       }
 
       if(!angular.isArray(source))
@@ -121,7 +127,6 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
         throw new Error("Can't register event source" + (namespace ? " in '" + namespace + "'." : "."), {
           source: source
         });
-
       namespaces[namespace] = (namespaces[namespace] || []).concat(source);
       self.broadcast(self.config.events.add, source, namespace);
     },
@@ -132,19 +137,23 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
      *  @param scope the scope the event should be registered in
      *  @param event the name of the event that should be broadcasted
      *  @param [filter] - object
-     *    - name property that will check if the events are in the correct namespace
+     *    - namespace property that will check if the events are in the correct namespace
      *    - start&end properties will check if the events are in the range between start & end
      *  @param [fn] callback that will be registered in the scope
      **/
     subscribe: function(scope, event, filter, fn) {
       if(angular.isFunction(filter)) {
-        fn = filter;
-        filter = {};
+        fn      = filter;
+        filter  = {};
       }
-      scope.$on('$destroy', self.handler(scope, event, filter || {}));
+      event = event || self.config.events.update;
+      var handle = self.handler(scope, event, filter || {});
       if(angular.isFunction(fn)) {
         scope.$on(event, fn);
       }
+      Object.keys(namespaces).forEach(function(namespace) {
+        handle(self.config.events.add, namespaces[namespace], namespace);
+      });
     },
 
     /**

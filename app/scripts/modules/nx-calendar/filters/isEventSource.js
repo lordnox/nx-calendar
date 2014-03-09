@@ -1,9 +1,6 @@
-var app = angular.module('nx-calendar')
-
+angular.module('nx-calendar')
   .filter('isEventSource', function(isEventListFilter) {
-    var isString = function(str) {
-      return typeof str === "string";
-    };
+    var isString = angular.isString;
 
     return function(source) {
       if(isEventListFilter(source))

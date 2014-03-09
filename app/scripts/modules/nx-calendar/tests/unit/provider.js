@@ -1,4 +1,4 @@
-//
+  //
 // test/unit/controllers/controllersSpec.js
 //
 
@@ -87,11 +87,11 @@ describe("Unit: Testing Controllers", function() {
 
       describe("subscribing", function() {
 
-        var counters;
+        var counters, evt, evt2;
 
         var assertCounters = function(counts) {
           Object.keys(counts).forEach(function(key) {
-            counts[key].should.be.equal(counters[key].count, "counter `" + key + "` not right");
+            counts[key].should.be.equal((counters[key]||{count:0}).count, "counter `" + key + "` not right");
           });
         };
 
@@ -99,25 +99,29 @@ describe("Unit: Testing Controllers", function() {
           counters = {
             add: unit.counter(),
             update: unit.counter(),
-            remove: unit.counter()
+            remove: unit.counter(),
+            destroy: unit.counter()
           };
           unit.provider('$rootScope').$on(provider.events().add, counters.add);
           unit.provider('$rootScope').$on(provider.events().update, counters.update);
           unit.provider('$rootScope').$on(provider.events().remove, counters.remove);
-        });
 
-        it("should be able to subscribe to events in a range", function() {
-          var evt = {
+
+          evt = {
             summary: "Test-Event 1",
             start: time.clone().add(1, 'second'),
             end: time.clone().add(2, 'seconds')
           };
 
-          var evt2 = {
+          evt2 = {
             summary: "Test-Event 2",
             start: time.clone().add(1, 'second'),
             end: time.clone().add(2, 'seconds')
           };
+        });
+
+        it("should be able to subscribe to events in a range", function() {
+
 
           var eventname = fixtures.name;
 
@@ -149,19 +153,23 @@ describe("Unit: Testing Controllers", function() {
           });
 
           provider.register([evt]);
-
           assertCounters({
             add: 1,
             local: 1,
-            callback: 1
+            callback: 1,
+            destroy: 0
           });
 
+          scope.$on('$destroy', counters.destroy);
           scope.$destroy();
+          // call $digest to clear the scope
+          scope.$digest();
 
           assertCounters({
             add: 1,
             local: 1,
-            callback: 1
+            callback: 1,
+            destroy: 1
           });
 
           provider.register([evt2]);
@@ -169,6 +177,24 @@ describe("Unit: Testing Controllers", function() {
           assertCounters({
             add: 2,
             local: 1,
+            callback: 1
+          });
+        });
+
+        it("should call the event when subscribing with existing events", function() {
+          counters.callback = unit.counter();
+          assertCounters({
+            add: 0,
+            callback: 0
+          });
+          provider.register([evt]);
+          assertCounters({
+            add: 1,
+            callback: 0
+          });
+          provider.subscribe(scope, fixtures.name, counters.callback);
+          assertCounters({
+            add: 1,
             callback: 1
           });
         });
