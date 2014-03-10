@@ -33,7 +33,11 @@ angular.module('nx-calendar').factory('nxSlotFactory', function(nxRangeFilterFac
   };
 
   // shorthand for map-notation
+  // remove the property and rebuild the list
   slotFactory.slot = function(property, list) {
+    list.map(function(event) {
+      delete event[property];
+    });
     return list.map(slotFactory(property));
   };
 

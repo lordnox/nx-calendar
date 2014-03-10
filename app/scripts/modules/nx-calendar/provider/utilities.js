@@ -21,7 +21,6 @@ angular.module('nx-calendar').provider('nxCalendarUtilities', function() {
         return result;
       }
     , sortByStartAndDuration: function(a, b) {
-        console.log(a.start.format('HH:MM'), b.start.format('HH:MM'), a.start.isBefore(b.start), a.start.isAfter(b.start), a.start.diff(b.start))
         return a.start.diff(b.start) || b.end.diff(b.start) - a.end.diff(a.start);
       }
     };

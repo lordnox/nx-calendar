@@ -2,7 +2,7 @@ var $injector;
 
 angular.module('nx-calendar').provider('nxEventSource', function() {
 
-  var namespaces, self = {
+  var namespaces, slotify, self = {
 
   /**
    *  Internal configuration
@@ -77,7 +77,7 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
     var filterFn = createFilter(filter);
     // create handle-fn to handle the filtering and broadcasting of the events
     var handle = function handle(type, events, namespace) {
-      var publish = filterFn(namespace, events);
+      var publish = filterFn(namespace, events).map(slotify);
       broadcast(scope, type, publish, event);
     };
     // return remove-fn
@@ -124,11 +124,11 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
         source = [source];
 
       if(!provide('isEventSourceFilter')(source))
-        throw new Error("Can't register event source" + (namespace ? " in '" + namespace + "'." : "."), {
+        throw new Error('Can\'t register event source' + (namespace ? ' in \'' + namespace + '\'.' : '.'), {
           source: source
         });
       namespaces[namespace] = (namespaces[namespace] || []).concat(source);
-      self.broadcast(self.config.events.add, source, namespace);
+      self.broadcast(self.config.events.add, namespaces[namespace], namespace);
     },
 
     /**
@@ -185,7 +185,8 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
   };
 
   /** release the provider into the world **/
-  self.$get = function(_$injector_) {
+  self.$get = function(_$injector_, nxSlotFactory) {
+    slotify = nxSlotFactory('slot');
     $injector = _$injector_;
     self.provider.clear();
     return self.provider;

@@ -72,6 +72,16 @@ $borderColorSmall = #BBB
 
       .nx-calendar-day-container
         border-left   1px solid $borderColor
+        position      relative
+
+        .nx-calendar-event-container
+          position    absolute
+          left        0%
+          top         0%
+          height      0%
+          width       100%
+          display     block
+          background  red
 
     &.nx-calendar-colwrapper
       position    absolute

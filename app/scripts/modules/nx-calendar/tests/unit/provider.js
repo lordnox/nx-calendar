@@ -46,11 +46,6 @@ describe('Unit: Testing Controllers', function() {
         sort = provider.sortByStartAndDuration;
       });
 
-      var log = function(h,l) {
-        console.log(h);
-        l.map(function(i) { console.log(i.id + '-' + i.start.format('HH:MM')); });
-      };
-
       it('should order 2 events with different starting times', function() {
         var list = [
           mkEvt(15, 1, 2)
@@ -67,12 +62,21 @@ describe('Unit: Testing Controllers', function() {
           mkEvt(11, 1, 2)
         , mkEvt(11, 2, 1)
         ];
-        log('before', list);
         list.sort(sort);
-        log('after', list);
         list.map(function(item, index) {
           item.id.should.be.equal(index + 1);
         });
+      });
+
+      xit('should order 1000 events in less than 500ms', function() {
+        var x = 1000, e, s;
+        var list = [];
+        while(x-->0)
+          list.push(mkEvt(10, 1, x));
+        s = (new Date()).getTime();
+        list.sort(sort);
+        e = (new Date()).getTime();
+        (e-s).should.be.lessThan(500, '"not so bad"-Error');
       });
     });
   });
