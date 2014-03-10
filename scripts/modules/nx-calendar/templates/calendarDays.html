@@ -17,9 +17,9 @@
     <tr>
       <td class="nx-calendar-first"></td>
       <td colspan="{{days.length}}" class="nx-calendar-spanningwrapper">
-        <div class="nx-calendar-tg-hourmarkers">
-          <div class="nx-calendar-tg-markercell" ng-repeat="hour in hours">
-            <div class="nx-calendar-tg-dualmarker"></div>
+        <div class="nx-calendar-hourmarkers">
+          <div class="nx-calendar-markercell" ng-repeat="hour in hours">
+            <div class="nx-calendar-dualmarker"></div>
           </div>
         </div>
       </td>
@@ -27,13 +27,12 @@
   </tbody>
   <tbody>
     <tr>
-      <td class="nx-calendar-first nx-calendar-tg-hours">
-        <div class="nx-calendar-tg-hour-inner" ng-repeat="hour in hours">
-          <div class="nx-calendar-tg-hour-clock">{{hour | moment:timeFormat}}</div>
+      <td class="nx-calendar-first nx-calendar-hours">
+        <div class="nx-calendar-hour-inner" ng-repeat="hour in hours">
+          <div class="nx-calendar-hour-clock">{{hour | moment:timeFormat}}</div>
         </div>
       </td>
-      <td ng-repeat="day in days" class="nx-calendar-tg-day-container">
-        <hour-view-event-container day="day" hours="hours"></hour-view-event-container>
+      <td ng-repeat="day in days" class="nx-calendar-day-container" nx-cal-day-container day="day" start="start" end="end">
       </td>
     </tr>
   </tbody>

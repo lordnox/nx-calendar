@@ -19109,15 +19109,15 @@ table.table thead .sorting_desc_disabled {
 .nx-calendar tbody {
   border-top: 0px !important;
 }
-.nx-calendar tbody tr .nx-calendar-tg-hours {
+.nx-calendar tbody tr .nx-calendar-hours {
   padding: 0;
 }
-.nx-calendar tbody tr .nx-calendar-tg-hours .nx-calendar-tg-hour-inner {
+.nx-calendar tbody tr .nx-calendar-hours .nx-calendar-hour-inner {
   padding-right: 2px;
   height: 44px;
   border-top: 1px solid #aaa;
 }
-.nx-calendar tbody tr .nx-calendar-tg-hours .nx-calendar-tg-hour-inner .nx-calendar-tg-hour-clock {
+.nx-calendar tbody tr .nx-calendar-hours .nx-calendar-hour-inner .nx-calendar-hour-clock {
   border-bottom: 1px dotted #aaa;
   border-left: 1px dotted #aaa;
   border-radius: 0 0 0 4px;
@@ -19130,7 +19130,7 @@ table.table thead .sorting_desc_disabled {
   font-size: 10px;
   font-weight: bold;
 }
-.nx-calendar tbody tr .nx-calendar-tg-day-container {
+.nx-calendar tbody tr .nx-calendar-day-container {
   border-left: 1px solid #aaa;
 }
 .nx-calendar tbody.nx-calendar-colwrapper {
@@ -19146,11 +19146,11 @@ table.table thead .sorting_desc_disabled {
   padding: 0;
   margin-top: 1px;
 }
-.nx-calendar tbody.nx-calendar-colwrapper .nx-calendar-spanningwrapper .nx-calendar-tg-markercell {
+.nx-calendar tbody.nx-calendar-colwrapper .nx-calendar-spanningwrapper .nx-calendar-markercell {
   height: 44px;
   border-top: 1px solid #aaa;
 }
-.nx-calendar tbody.nx-calendar-colwrapper .nx-calendar-spanningwrapper .nx-calendar-tg-markercell .nx-calendar-tg-dualmarker {
+.nx-calendar tbody.nx-calendar-colwrapper .nx-calendar-spanningwrapper .nx-calendar-markercell .nx-calendar-dualmarker {
   display: block;
   height: 50%;
   border-bottom: 1px dotted #aaa;
@@ -19160,7 +19160,7 @@ table.table thead .sorting_desc_disabled {
   margin-bottom   5px;
 }
 
-.nx-calendar-tg-hours-head {
+.nx-calendar-hours-head {
   width           60px;
   text-align      center;
 }
@@ -19205,7 +19205,7 @@ table.table thead .sorting_desc_disabled {
   vertical-align  bottom;
 }
 
-.nx-calendar-tg-day {
+.nx-calendar-day {
   position        relative;
   height          1030px;
 }
@@ -19214,7 +19214,7 @@ table.table thead .sorting_desc_disabled {
   background- r             #F1F1F1;
 }
 
-.nx-tg-now {
+.nx-now {
   position        relative;
   left            0;
   width           100%;
@@ -19241,13 +19241,13 @@ table.table thead .sorting_desc_disabled {
   border-bottom   1px solid #DDD;
 }
 
-.nx-calendar-tg-markercell {
+.nx-calendar-markercell {
   height          42px;
   border-top      1px solid #DDD;
   padding-left    80px;
 }
 
-.nx-calendar-tg-day-container {
+.nx-calendar-day-container {
   position        relative;
 }
 
@@ -19320,7 +19320,7 @@ table.table thead .sorting_desc_disabled {
   border-bottom   1px dotted #DDD;
 }
 
-.nx-calendar-tg-hour-clock {
+.nx-calendar-hour-clock {
   border-bottom   1px dotted #DDD;
   border-left     1px dotted #DDD;
   border-radius   0 0 0 4px;
@@ -19331,13 +19331,13 @@ table.table thead .sorting_desc_disabled {
   padding-right   4px;
 }
 
-.nx-calendar-tg-dualmarker {
+.nx-calendar-dualmarker {
   height          21px;
   border-bottom   1px dotted #DDD;
   font-size       1px;
 }
 
-.nx-calendar-tg-hours {
+.nx-calendar-hours {
   border-left     1px solid #DDD;
   background- r             white;
   color           555;
@@ -19348,7 +19348,7 @@ table.table thead .sorting_desc_disabled {
   width           80px;
 }
 
-.nx-calendar-tg-hour-inner {
+.nx-calendar-hour-inner {
   padding-right   2px;
   height          43px;
 }
