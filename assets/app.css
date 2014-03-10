@@ -19132,6 +19132,16 @@ table.table thead .sorting_desc_disabled {
 }
 .nx-calendar tbody tr .nx-calendar-day-container {
   border-left: 1px solid #aaa;
+  position: relative;
+}
+.nx-calendar tbody tr .nx-calendar-day-container .nx-calendar-event-container {
+  position: absolute;
+  left: 0%;
+  top: 0%;
+  height: 0%;
+  width: 100%;
+  display: block;
+  background: #f00;
 }
 .nx-calendar tbody.nx-calendar-colwrapper {
   position: absolute;

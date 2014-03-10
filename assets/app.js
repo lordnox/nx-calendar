@@ -263,6 +263,24 @@ var directiveDefinition = function directiveDefinition() {
 
 ;var app = angular.module('nx-calendar');
 
+app.controller('nx-calendar-day-event-controller', function($scope) {
+  var minutes = ($scope.end - $scope.start) * 60
+    , day     = $scope.day.clone().hour($scope.start);
+
+  $scope.position = {
+    top   : 100 * $scope.event.start.diff(day, 'minutes') / minutes
+  , left  : 10 * $scope.event.slot
+  , height: 100 * $scope.event.end.diff($scope.event.start, 'minutes') / minutes
+  , width : 100 - 10 * $scope.event.slot
+  };
+
+  console.log($scope.event.summary);
+  console.log($scope.position);
+
+  $scope.position.top     = Math.max(0  , $scope.position.top); // at least 0%
+  $scope.position.height  = Math.min(100, $scope.position.height);
+});
+
 var directiveDefinition = function directiveDefinition(directive) {
   return function(nxCalendarConfiguration) {
     var template  = nxCalendarConfiguration.template;
@@ -271,10 +289,11 @@ var directiveDefinition = function directiveDefinition(directive) {
       scope: {
         start : '=start'
       , end   : '=end'
+      , day   : '=day'
       , event : '=' + directive
-      , slot  : '=slot'
       },
-      templateUrl: template('calendarDayEvent')
+      templateUrl : template('calendarDayEvent'),
+      controller  : 'nx-calendar-day-event-controller'
     };
   };
 };
@@ -335,34 +354,39 @@ var directiveDefinition = function directiveDefinition() {
 
 ;var app = angular.module('nx-calendar');
 
-var directiveDefinition = function directiveDefinition(directive) {
-  return function($compile) {
+var directiveDefinition = function directiveDefinition() {
+  return function() {
 
     return {
       restrict: 'A',
       scope: {
-        posx: '=posX',
-        posy: '=posY'
+        posx  : '=left'
+      , posy  : '=top'
+      , height: '=height'
+      , width : '=width'
       },
       link: function($scope, iElement, iAttrs) {
         var refresh = function refresh() {
           $scope.x = $scope.posx;
           $scope.y = $scope.posy;
-          $scope.mode = ['%', 'percent'].indexOf(iAttrs['nxPosition']) !== -1 ? '%' : 'px';
+          $scope.mode = ['%', 'percent'].indexOf(iAttrs.nxPosition) !== -1 ? '%' : 'px';
 
-          if($scope.mode === '%') {
-            $scope.x = Math.min(100, Math.max(0, $scope.x));
-            $scope.y = Math.min(100, Math.max(0, $scope.y));
-          }
-
-          iElement.css({
-            left    : $scope.x + "" + $scope.mode
-          , top     : $scope.y + "" + $scope.mode
+          var css = {
+            left    : +($scope.x      || 0) + '' + $scope.mode
+          , top     : +($scope.y      || 0) + '' + $scope.mode
+          , height  : +($scope.height || 0) + '' + $scope.mode
+          , width   : +($scope.width  || 0) + '' + $scope.mode
+          };
+          Object.keys(css).map(function(key) {
+            if(!iAttrs.hasOwnProperty(key))
+              delete css[key];
           });
+          console.log(css);
+          iElement.css(css);
         };
 
-        $scope.$watch("posx", refresh);
-        $scope.$watch("posy", refresh);
+        $scope.$watch('posx', refresh);
+        $scope.$watch('posy', refresh);
       }
     };
   };
@@ -370,7 +394,7 @@ var directiveDefinition = function directiveDefinition(directive) {
 
 ['nxPosition'].map(function(directive) {
   app.directive(directive, directiveDefinition(directive));
-})
+});
 ;angular.module('nx-calendar').factory('nxRangeFilterFactory', function(isEventInRangeFilter) {
   return function(start, end) {
     return function(event) {
@@ -412,7 +436,11 @@ angular.module('nx-calendar').factory('nxSlotFactory', function(nxRangeFilterFac
   };
 
   // shorthand for map-notation
+  // remove the property and rebuild the list
   slotFactory.slot = function(property, list) {
+    list.map(function(event) {
+      delete event[property];
+    });
     return list.map(slotFactory(property));
   };
 
@@ -557,7 +585,7 @@ angular.module('nx-calendar').factory('nxSlotFactory', function(nxRangeFilterFac
 
 angular.module('nx-calendar').provider('nxEventSource', function() {
 
-  var namespaces, self = {
+  var namespaces, slotify, self = {
 
   /**
    *  Internal configuration
@@ -632,7 +660,7 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
     var filterFn = createFilter(filter);
     // create handle-fn to handle the filtering and broadcasting of the events
     var handle = function handle(type, events, namespace) {
-      var publish = filterFn(namespace, events);
+      var publish = filterFn(namespace, events).map(slotify);
       broadcast(scope, type, publish, event);
     };
     // return remove-fn
@@ -679,11 +707,11 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
         source = [source];
 
       if(!provide('isEventSourceFilter')(source))
-        throw new Error("Can't register event source" + (namespace ? " in '" + namespace + "'." : "."), {
+        throw new Error('Can\'t register event source' + (namespace ? ' in \'' + namespace + '\'.' : '.'), {
           source: source
         });
       namespaces[namespace] = (namespaces[namespace] || []).concat(source);
-      self.broadcast(self.config.events.add, source, namespace);
+      self.broadcast(self.config.events.add, namespaces[namespace], namespace);
     },
 
     /**
@@ -740,7 +768,8 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
   };
 
   /** release the provider into the world **/
-  self.$get = function(_$injector_) {
+  self.$get = function(_$injector_, nxSlotFactory) {
+    slotify = nxSlotFactory('slot');
     $injector = _$injector_;
     self.provider.clear();
     return self.provider;
@@ -771,7 +800,6 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
         return result;
       }
     , sortByStartAndDuration: function(a, b) {
-        console.log(a.start.format('HH:MM'), b.start.format('HH:MM'), a.start.isBefore(b.start), a.start.isAfter(b.start), a.start.diff(b.start))
         return a.start.diff(b.start) || b.end.diff(b.start) - a.end.diff(a.start);
       }
     };
