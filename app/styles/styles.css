@@ -4,6 +4,7 @@
   background: rgba(85,85,85,0.8);
   table-layout: fixed;
   position: relative;
+  font-size: 8px;
 }
 .nx-calendar thead > tr > th {
   border-top: inherit;
@@ -65,7 +66,49 @@
   height: 0%;
   width: 100%;
   display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nx-calendar tbody tr .nx-calendar-day-container .nx-calendar-event-container.hovered,
+.nx-calendar tbody tr .nx-calendar-day-container .nx-calendar-event-container:hover {
+  height: auto !important;
+}
+.nx-calendar tbody tr .nx-calendar-day-container .nx-calendar-event-container.hovered .nx-calendar-event-content,
+.nx-calendar tbody tr .nx-calendar-day-container .nx-calendar-event-container:hover .nx-calendar-event-content {
+  height: auto;
+}
+.nx-calendar tbody tr .nx-calendar-day-container .nx-calendar-event-container .nx-calendar-event-content {
   background: #f00;
+  text-align: left;
+  min-height: 100%;
+  height: 100%;
+  word-wrap: break-word;
+  font-weight: normal;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0,0,0,0.2);
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  background-clip: padding-box;
+}
+.nx-calendar tbody tr .nx-calendar-day-container .nx-calendar-event-container .nx-calendar-event-content .nx-calendar-event-header {
+  font-size: 1.2em;
+  font-weight: bold;
+  line-height: 1.2em;
+  padding: 1px 2px 0 2px;
+  border-radius: 2px;
+  background-color: rgba(0,0,0,0.5);
+  color: #fff;
+  margin: 2px;
+  text-align: left;
+  word-wrap: break-word;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nx-calendar tbody tr .nx-calendar-day-container .nx-calendar-event-container .nx-calendar-event-content .nx-calendar-event-body {
+  font-size: 1.1em;
+  margin: 4px;
 }
 .nx-calendar tbody.nx-calendar-colwrapper {
   position: absolute;
@@ -286,6 +329,9 @@
   padding-right   2px;
   height          43px;
 }
+
+
+######## CONTAINER EVENTS
 
 .nx-calendar-event-container  {
   opacity         7;

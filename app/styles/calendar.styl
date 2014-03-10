@@ -16,6 +16,7 @@ $borderColorSmall = #BBB
   background      $backgroundColor
   table-layout    fixed
   position        relative
+  font-size       8px
 
   thead
     & > tr > th
@@ -81,7 +82,67 @@ $borderColorSmall = #BBB
           height      0%
           width       100%
           display     block
-          background  red
+          overflow        hidden;
+          text-overflow   ellipsis;
+
+          &.hovered, &:hover
+            height          auto !important;
+
+            .nx-calendar-event-content
+              height          auto
+
+          .nx-calendar-event-content
+            background      red
+            text-align      left
+            min-height      100%
+            height          100%
+            word-wrap       break-word
+            font-weight     normal
+            border          1px solid #CCC
+            border          1px solid rgba(0, 0, 0, 0.2)
+            border-radius   2px
+            box-shadow      0 1px 3px rgba(0, 0, 0, 0.2)
+            background-clip padding-box
+
+
+            .nx-calendar-event-header
+              font-size         1.2em;
+              font-weight       bold;
+              line-height       1.2em;
+              padding           1px 2px 0 2px;
+              border-radius     2px;
+              background-color  rgba(0, 0, 0, 0.5);
+              color             rgb(255, 255, 255);
+              margin            2px;
+              text-align        left;
+              word-wrap         break-word;
+              font-weight       bold;
+              overflow          hidden;
+              text-overflow     ellipsis;
+              white-space       nowrap;
+
+            .nx-calendar-event-body
+              font-size       1.1em;
+              margin          4px;
+
+
+            // .nx-calendar-event-container.hovered,
+            // .nx-calendar- ent-container            hover {
+            //   opacity         9;
+            //   overflow        inherit;
+            //   z-index         1000;
+            // }
+
+
+            // .nx-calendar-event-container.hovered .nx-calendar-event-header,
+            // .nx-calendar- ent-container            hover .nx-calendar-event-header,
+            // .nx-calendar-event-container.hovered .nx-calendar-event-body,
+            // .nx-calendar- ent-container            hover .nx-calendar-event-body {
+            //   white-space     normal;
+            // }
+
+
+
 
     &.nx-calendar-colwrapper
       position    absolute
@@ -305,6 +366,9 @@ $borderColorSmall = #BBB
   padding-right   2px;
   height          43px;
 }
+
+
+######## CONTAINER EVENTS
 
 .nx-calendar-event-container  {
   opacity         7;

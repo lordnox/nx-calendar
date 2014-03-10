@@ -28,6 +28,10 @@ app.run(function(nxEventSource) {
     };
   };
 
+
+  var e = mkevt('Long?!' , 3, 4, 2);
+  e.summary = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.';
+
   /* event source that contains custom events on the scope */
   data.events = [
     {title: 'All Day Event',start: new Date(y, m, 1)}
@@ -44,13 +48,14 @@ app.run(function(nxEventSource) {
   , mkevt('Saturday'  , 6, 14, 1)
   , mkevt('Sunday'    , 7, 14, 1)
   , mkevt('Friday 2'  , 5, 14, 1)
+  , e
   ].map(function(item) {
     return {
       start: moment(item.start),
       end: moment(item.end),
       title: item.title,
       id: item.id || (item.id = cid++),
-      summary: item.id + ' ---- ' + item.title
+      summary: item.summary || (item.id + ' ---- ' + item.title)
     };
   });
 
