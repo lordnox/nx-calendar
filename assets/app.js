@@ -138,6 +138,10 @@ app.run(function(nxEventSource) {
     };
   };
 
+
+  var e = mkevt('Long?!' , 3, 4, 2);
+  e.summary = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.';
+
   /* event source that contains custom events on the scope */
   data.events = [
     {title: 'All Day Event',start: new Date(y, m, 1)}
@@ -154,13 +158,14 @@ app.run(function(nxEventSource) {
   , mkevt('Saturday'  , 6, 14, 1)
   , mkevt('Sunday'    , 7, 14, 1)
   , mkevt('Friday 2'  , 5, 14, 1)
+  , e
   ].map(function(item) {
     return {
       start: moment(item.start),
       end: moment(item.end),
       title: item.title,
       id: item.id || (item.id = cid++),
-      summary: item.id + ' ---- ' + item.title
+      summary: item.summary || (item.id + ' ---- ' + item.title)
     };
   });
 
@@ -269,13 +274,10 @@ app.controller('nx-calendar-day-event-controller', function($scope) {
 
   $scope.position = {
     top   : 100 * $scope.event.start.diff(day, 'minutes') / minutes
-  , left  : 10 * $scope.event.slot
+  , left  :  10 * ($scope.event.slot - 1)
   , height: 100 * $scope.event.end.diff($scope.event.start, 'minutes') / minutes
-  , width : 100 - 10 * $scope.event.slot
+  , width : 100 - 10 * ($scope.event.slot - 1)
   };
-
-  console.log($scope.event.summary);
-  console.log($scope.position);
 
   $scope.position.top     = Math.max(0  , $scope.position.top); // at least 0%
   $scope.position.height  = Math.min(100, $scope.position.height);
@@ -661,6 +663,11 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
     // create handle-fn to handle the filtering and broadcasting of the events
     var handle = function handle(type, events, namespace) {
       var publish = filterFn(namespace, events).map(slotify);
+      console.log(scope.$id, event, publish.length);
+      publish.map(function(evt) {
+        console.log(evt.slot, evt.summary);
+        console.log(evt.start.format('HH:mm') + ' > ' + evt.end.format('HH:mm'));
+      });
       broadcast(scope, type, publish, event);
     };
     // return remove-fn
