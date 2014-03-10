@@ -150,14 +150,14 @@ app.run(function(nxEventSource) {
   , {id: 999,title: 'Repeating Event',start: new Date(y, m, d + 4, 16, 0),allDay: false}
   , {title: 'Birthday Party',start: new Date(y, m, d + 1, 19, 0),end: new Date(y, m, d + 1, 22, 30),allDay: false}
   , {title: 'Click for Google',start: new Date(y, m, 28),end: new Date(y, m, 29),url: 'http://google.com/'}
-  , mkevt('Monday'    , 1, 14, 1)
-  , mkevt('Tuesday'   , 2, 14, 1)
+  , mkevt('Monday'    , 1, 14, 4)
+  , mkevt('Tuesday'   , 2, 14, 2)
   , mkevt('Wednesday' , 3, 14, 1)
-  , mkevt('Thursday'  , 4, 14, 1)
-  , mkevt('Friday'    , 5, 14, 1)
-  , mkevt('Saturday'  , 6, 14, 1)
+  , mkevt('Thursday'  , 4, 14, 2)
+  , mkevt('Friday'    , 5, 14, 4)
+  , mkevt('Saturday'  , 6, 14, 2)
   , mkevt('Sunday'    , 7, 14, 1)
-  , mkevt('Friday 2'  , 5, 14, 1)
+  , mkevt('Friday 2'  , 5, 14, 10)
   , e
   ].map(function(item) {
     return {
@@ -383,12 +383,14 @@ var directiveDefinition = function directiveDefinition() {
             if(!iAttrs.hasOwnProperty(key))
               delete css[key];
           });
-          console.log(css);
+
           iElement.css(css);
         };
 
         $scope.$watch('posx', refresh);
         $scope.$watch('posy', refresh);
+        $scope.$watch('height', refresh);
+        $scope.$watch('width', refresh);
       }
     };
   };
@@ -663,11 +665,11 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
     // create handle-fn to handle the filtering and broadcasting of the events
     var handle = function handle(type, events, namespace) {
       var publish = filterFn(namespace, events).map(slotify);
-      console.log(scope.$id, event, publish.length);
-      publish.map(function(evt) {
-        console.log(evt.slot, evt.summary);
-        console.log(evt.start.format('HH:mm') + ' > ' + evt.end.format('HH:mm'));
-      });
+      // console.log(scope.$id, event, publish.length);
+      // publish.map(function(evt) {
+      //   console.log(evt.slot, evt.summary);
+      //   console.log(evt.start.format('HH:mm') + ' > ' + evt.end.format('HH:mm'));
+      // });
       broadcast(scope, type, publish, event);
     };
     // return remove-fn
