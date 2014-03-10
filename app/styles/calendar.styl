@@ -47,17 +47,17 @@ $borderColorSmall = #BBB
     border-top 0px !important
 
     tr
-      .nx-calendar-tg-hours
+      .nx-calendar-hours
 
         padding 0
 
-        .nx-calendar-tg-hour-inner
+        .nx-calendar-hour-inner
 
           padding-right 2px
           height        $cellHeight
           border-top    1px solid $borderColor
 
-          .nx-calendar-tg-hour-clock
+          .nx-calendar-hour-clock
             border-bottom   1px dotted $borderColor
             border-left     1px dotted $borderColor
             border-radius   0 0 0 4px
@@ -70,7 +70,7 @@ $borderColorSmall = #BBB
             font-size       10px
             font-weight     bold
 
-      .nx-calendar-tg-day-container
+      .nx-calendar-day-container
         border-left   1px solid $borderColor
 
     &.nx-calendar-colwrapper
@@ -86,11 +86,11 @@ $borderColorSmall = #BBB
         padding 0
         margin-top 1px
 
-        .nx-calendar-tg-markercell
+        .nx-calendar-markercell
           height      $cellHeight
           border-top  1px solid $borderColor
 
-          .nx-calendar-tg-dualmarker
+          .nx-calendar-dualmarker
             display       block
             height        50%
             border-bottom 1px dotted $borderColor
@@ -103,7 +103,7 @@ $borderColorSmall = #BBB
   margin-bottom   5px;
 }
 
-.nx-calendar-tg-hours-head {
+.nx-calendar-hours-head {
   width           60px;
   text-align      center;
 }
@@ -148,7 +148,7 @@ $borderColorSmall = #BBB
   vertical-align  bottom;
 }
 
-.nx-calendar-tg-day {
+.nx-calendar-day {
   position        relative;
   height          1030px;
 }
@@ -157,7 +157,7 @@ $borderColorSmall = #BBB
   background- r             #F1F1F1;
 }
 
-.nx-tg-now {
+.nx-now {
   position        relative;
   left            0;
   width           100%;
@@ -184,13 +184,13 @@ $borderColorSmall = #BBB
   border-bottom   1px solid #DDD;
 }
 
-.nx-calendar-tg-markercell {
+.nx-calendar-markercell {
   height          42px;
   border-top      1px solid #DDD;
   padding-left    80px;
 }
 
-.nx-calendar-tg-day-container {
+.nx-calendar-day-container {
   position        relative;
 }
 
@@ -263,7 +263,7 @@ $borderColorSmall = #BBB
   border-bottom   1px dotted #DDD;
 }
 
-.nx-calendar-tg-hour-clock {
+.nx-calendar-hour-clock {
   border-bottom   1px dotted #DDD;
   border-left     1px dotted #DDD;
   border-radius   0 0 0 4px;
@@ -274,13 +274,13 @@ $borderColorSmall = #BBB
   padding-right   4px;
 }
 
-.nx-calendar-tg-dualmarker {
+.nx-calendar-dualmarker {
   height          21px;
   border-bottom   1px dotted #DDD;
   font-size       1px;
 }
 
-.nx-calendar-tg-hours {
+.nx-calendar-hours {
   border-left     1px solid #DDD;
   background- r             white;
   color           555;
@@ -291,7 +291,7 @@ $borderColorSmall = #BBB
   width           80px;
 }
 
-.nx-calendar-tg-hour-inner {
+.nx-calendar-hour-inner {
   padding-right   2px;
   height          43px;
 }

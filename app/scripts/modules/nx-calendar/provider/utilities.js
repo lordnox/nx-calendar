@@ -8,8 +8,8 @@ angular.module('nx-calendar').provider('nxCalendarUtilities', function() {
           var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
           return v.toString(16);
         });
-      },
-      range: function(from, to, fn) {
+      }
+    , range: function(from, to, fn) {
         if(!to || angular.isFunction(to)) {
           fn = to;
           to = from;
@@ -19,6 +19,10 @@ angular.module('nx-calendar').provider('nxCalendarUtilities', function() {
         var result = [];
         while(to > from) result.push(fn(from++));
         return result;
+      }
+    , sortByStartAndDuration: function(a, b) {
+        console.log(a.start.format('HH:MM'), b.start.format('HH:MM'), a.start.isBefore(b.start), a.start.isAfter(b.start), a.start.diff(b.start))
+        return a.start.diff(b.start) || b.end.diff(b.start) - a.end.diff(a.start);
       }
     };
 

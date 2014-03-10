@@ -4,7 +4,6 @@
   "laxcomma": true,
   "laxbreak": true,
   "strict": false,
-  "quotmark": false,
   "expr": true,
   "globals": {
     "require": false,

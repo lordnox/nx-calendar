@@ -2,9 +2,9 @@
 // test/unit/controllers/controllersSpec.js
 //
 
-describe("Unit: Testing Controllers", function() {
+describe('Unit: Testing Controllers', function() {
 
-  unit("nx-calendar");
+  unit('nx-calendar');
 
   var fixtures = {
     name: 'myEvents',
@@ -24,7 +24,60 @@ describe("Unit: Testing Controllers", function() {
     }
   };
 
-  describe("nx-calendar-providers", function() {
+  describe('nxCalendarUtilities', function() {
+    var provider, day = moment();
+
+    var mkEvt = function(hour, duration, id) {
+      return {
+        start: day.clone().hour(hour),
+        end: day.clone().hour(hour).add(duration, 'hours').add(-1, 'second'),
+        id: id
+      };
+    };
+
+    beforeEach(function() {
+      provider = unit.provider('nxCalendarUtilities');
+    });
+
+    describe('sortByStartAndDuration', function() {
+      var sort;
+
+      beforeEach(function() {
+        sort = provider.sortByStartAndDuration;
+      });
+
+      var log = function(h,l) {
+        console.log(h);
+        l.map(function(i) { console.log(i.id + '-' + i.start.format('HH:MM')); });
+      };
+
+      it('should order 2 events with different starting times', function() {
+        var list = [
+          mkEvt(15, 1, 2)
+        , mkEvt(11, 1, 1)
+        ];
+        list.sort(sort);
+        list.map(function(item, index) {
+          item.id.should.be.equal(index + 1);
+        });
+      });
+
+      it('should order 2 events with different durations', function() {
+        var list = [
+          mkEvt(11, 1, 2)
+        , mkEvt(11, 2, 1)
+        ];
+        log('before', list);
+        list.sort(sort);
+        log('after', list);
+        list.map(function(item, index) {
+          item.id.should.be.equal(index + 1);
+        });
+      });
+    });
+  });
+
+  describe('nx-calendar-providers', function() {
 
     var scope, provider, time;
 
@@ -33,7 +86,7 @@ describe("Unit: Testing Controllers", function() {
       scope = unit.scope();
     });
 
-    describe("nxEventSource", function() {
+    describe('nxEventSource', function() {
 
       beforeEach(function() {
         time = moment();
@@ -41,39 +94,39 @@ describe("Unit: Testing Controllers", function() {
         provider.clear();
       });
 
-      it("should provide some methods", function() {
-        provider.should.have.property("register");  // register a event source
-        provider.should.have.property("subscribe"); // subscribe to an event range filtered by a source name
-        provider.should.have.property("get");       // retrieve all events from a named source in a range
+      it('should provide some methods', function() {
+        provider.should.have.property('register');  // register a event source
+        provider.should.have.property('subscribe'); // subscribe to an event range filtered by a source name
+        provider.should.have.property('get');       // retrieve all events from a named source in a range
       });
 
-      describe("getting", function() {
+      describe('getting', function() {
 
         beforeEach(function() {
           provider.register(fixtures.name, fixtures.events(time));
           provider.register(fixtures.event('default-event', time));
         });
 
-        it("should get all events by source name", function() {
+        it('should get all events by source name', function() {
           provider.get().should.have.length(1);
           provider.get(fixtures.name).should.have.length(3);
         });
 
-        it("should get all events in a range", function() {
+        it('should get all events in a range', function() {
           provider.get(fixtures.name, time.clone().subtract(1, 'second'), time.clone().add(3, 'second')).should.have.length(1);
         });
       });
 
-      describe("registering", function() {
+      describe('registering', function() {
 
-        it("should be able to register an event", function() {
+        it('should be able to register an event', function() {
           var evt = fixtures.event('myEvent', time);
           provider.register(fixtures.name, evt);
           provider.get(fixtures.name).should.have.length(1);
           provider.get(fixtures.name)[0].should.be.equal(evt);
         });
 
-        it("should be able to register an array of events", function() {
+        it('should be able to register an array of events', function() {
           var evts = [
             fixtures.event('myEvent 1', time),
             fixtures.event('myEvent 2', time)
@@ -85,13 +138,13 @@ describe("Unit: Testing Controllers", function() {
         });
       });
 
-      describe("subscribing", function() {
+      describe('subscribing', function() {
 
         var counters, evt, evt2;
 
         var assertCounters = function(counts) {
           Object.keys(counts).forEach(function(key) {
-            counts[key].should.be.equal((counters[key]||{count:0}).count, "counter `" + key + "` not right");
+            counts[key].should.be.equal((counters[key]||{count:0}).count, 'counter `' + key + '` not right');
           });
         };
 
@@ -108,19 +161,19 @@ describe("Unit: Testing Controllers", function() {
 
 
           evt = {
-            summary: "Test-Event 1",
+            summary: 'Test-Event 1',
             start: time.clone().add(1, 'second'),
             end: time.clone().add(2, 'seconds')
           };
 
           evt2 = {
-            summary: "Test-Event 2",
+            summary: 'Test-Event 2',
             start: time.clone().add(1, 'second'),
             end: time.clone().add(2, 'seconds')
           };
         });
 
-        it("should be able to subscribe to events in a range", function() {
+        it('should be able to subscribe to events in a range', function() {
 
 
           var eventname = fixtures.name;
@@ -181,7 +234,7 @@ describe("Unit: Testing Controllers", function() {
           });
         });
 
-        it("should call the event when subscribing with existing events", function() {
+        it('should call the event when subscribing with existing events', function() {
           counters.callback = unit.counter();
           assertCounters({
             add: 0,
@@ -199,29 +252,29 @@ describe("Unit: Testing Controllers", function() {
           });
         });
 
-        it("should apply the filter correctly", function() {
+        it('should apply the filter correctly', function() {
           counters.unfiltered = unit.counter();
           counters.filtered = unit.counter();
 
           var evts = {
-            filtered: fixtures.event("filtered", time),
-            unfiltered: fixtures.event("unfiltered", time),
-            named: fixtures.event("named", time)
+            filtered: fixtures.event('filtered', time),
+            unfiltered: fixtures.event('unfiltered', time),
+            named: fixtures.event('named', time)
           };
 
 
-          provider.subscribe(scope, "unfiltered", counters.unfiltered);
-          provider.subscribe(scope, "filtered", {namespace: "named"}, counters.filtered);
+          provider.subscribe(scope, 'unfiltered', counters.unfiltered);
+          provider.subscribe(scope, 'filtered', {namespace: 'named'}, counters.filtered);
 
           provider.register(evts.unfiltered);
 
           assertCounters({ filtered: 0, unfiltered: 1});
 
-          provider.register(evts.filtered, "filtered");
+          provider.register(evts.filtered, 'filtered');
 
           assertCounters({ filtered: 0, unfiltered: 2});
 
-          provider.register("named", evts.named);
+          provider.register('named', evts.named);
 
           assertCounters({ filtered: 1, unfiltered: 3});
         });

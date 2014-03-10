@@ -18,7 +18,7 @@
     <div id="page">
       <div id="nav" ui-view="navigation">
       </div>
-      <div id="main" ui-view autoscroll="false">
+      <div id="main" ui-view>
       </div>
     </div>
     <div id="footer">
@@ -29,39 +29,34 @@
       </div>
     </div>
 
-    <script src='bower_components/moment/moment.js'></script>
-    <script src='bower_components/angular/angular.js'></script>
-    <script src='bower_components/angular-route/angular-route.js'></script>
-    <script src='bower_components/angular-ui-router/release/angular-ui-router.js'></script>
-    <script src='scripts/modules/configuration/module.js'></script>
-    <script src='scripts/modules/nx-calendar-demo/app.js'></script>
-    <script src='scripts/modules/nx-calendar/app.js'></script>
-    <script src='scripts/modules/nx-calendar-demo/controllers/demoCtrl.js'></script>
-    <script src='scripts/modules/nx-calendar/controllers/calendar.js'></script>
-    <script src='scripts/modules/nx-calendar/directives/calendar.js'></script>
-    <script src='scripts/modules/nx-calendar/directives/calendarDayHours.js'></script>
-    <script src='scripts/modules/nx-calendar/directives/calendarDayHoursEvent.js'></script>
-    <script src='scripts/modules/nx-calendar/directives/calendarDayHoursNow.js'></script>
-    <script src='scripts/modules/nx-calendar/directives/calendarDayWhole.js'></script>
-    <script src='scripts/modules/nx-calendar/directives/calendarDayWholeEvent.js'></script>
-    <script src='scripts/modules/nx-calendar/directives/calendarDays.js'></script>
-    <script src='scripts/modules/nx-calendar/directives/calendarEvents.js'></script>
-    <script src='scripts/modules/nx-calendar/directives/calendarMonth.js'></script>
-    <script src='scripts/modules/nx-calendar/directives/nxPosition.js'></script>
-    <script src='scripts/modules/nx-calendar/factories/rangeFilter.js'></script>
-    <script src='scripts/modules/nx-calendar/filters/isEvent.js'></script>
-    <script src='scripts/modules/nx-calendar/filters/isEventAfter.js'></script>
-    <script src='scripts/modules/nx-calendar/filters/isEventBefore.js'></script>
-    <script src='scripts/modules/nx-calendar/filters/isEventInRange.js'></script>
-    <script src='scripts/modules/nx-calendar/filters/isEventList.js'></script>
-    <script src='scripts/modules/nx-calendar/filters/isEventSource.js'></script>
-    <script src='scripts/modules/nx-calendar/filters/isRange.js'></script>
-    <script src='scripts/modules/nx-calendar/filters/moment.js'></script>
-    <script src='scripts/modules/nx-calendar/filters/toMoment.js'></script>
-    <script src='scripts/modules/nx-calendar/provider/configuration.js'></script>
-    <script src='scripts/modules/nx-calendar/provider/eventSource.js'></script>
-    <script src='scripts/modules/nx-calendar/provider/utilities.js'></script>
-    <script src='scripts/app.js'></script>
+    <script src="bower_components/moment/moment.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="scripts/modules/configuration/module.js"></script>
+    <script src="scripts/modules/nx-calendar-demo/app.js"></script>
+    <script src="scripts/modules/nx-calendar/app.js"></script>
+    <script src="scripts/modules/nx-calendar-demo/controllers/demoCtrl.js"></script>
+    <script src="scripts/modules/nx-calendar/controllers/calendar.js"></script>
+    <script src="scripts/modules/nx-calendar/directives/calendar.js"></script>
+    <script src="scripts/modules/nx-calendar/directives/calendarDayContainer.js"></script>
+    <script src="scripts/modules/nx-calendar/directives/calendarDayEvent.js"></script>
+    <script src="scripts/modules/nx-calendar/directives/calendarDays.js"></script>
+    <script src="scripts/modules/nx-calendar/directives/nxPosition.js"></script>
+    <script src="scripts/modules/nx-calendar/factories/rangeFilter.js"></script>
+    <script src="scripts/modules/nx-calendar/filters/isEvent.js"></script>
+    <script src="scripts/modules/nx-calendar/filters/isEventAfter.js"></script>
+    <script src="scripts/modules/nx-calendar/filters/isEventBefore.js"></script>
+    <script src="scripts/modules/nx-calendar/filters/isEventInRange.js"></script>
+    <script src="scripts/modules/nx-calendar/filters/isEventList.js"></script>
+    <script src="scripts/modules/nx-calendar/filters/isEventSource.js"></script>
+    <script src="scripts/modules/nx-calendar/filters/isRange.js"></script>
+    <script src="scripts/modules/nx-calendar/filters/moment.js"></script>
+    <script src="scripts/modules/nx-calendar/filters/toMoment.js"></script>
+    <script src="scripts/modules/nx-calendar/provider/configuration.js"></script>
+    <script src="scripts/modules/nx-calendar/provider/eventSource.js"></script>
+    <script src="scripts/modules/nx-calendar/provider/utilities.js"></script>
+    <script src="scripts/app.js"></script>
   </body>
 </html>
 

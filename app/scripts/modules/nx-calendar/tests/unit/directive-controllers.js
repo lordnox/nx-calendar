@@ -2,12 +2,10 @@
 // test/unit/controllers/controllersSpec.js
 //
 
-describe("Unit: Testing Directives Controllers", function() {
+describe('Unit: Testing Directives Controllers', function() {
 
   var $rootScope
     , $controller
-    , eventsource
-    , time = moment()
     ;
 
   var fixture = {
@@ -52,63 +50,44 @@ describe("Unit: Testing Directives Controllers", function() {
     $controller = _$controller_;
   }));
 
-  describe("nx-calendar-days-controller", function() {
-    var scope, mock, eventsource;
+  describe('nx-calendar-days-controller', function() {
+    var scope, mock;
 
-    describe("basics", function() {
+    describe('basics', function() {
       beforeEach(function() {
         scope = $rootScope.$new();
         mock  = { $scope: scope };
       });
 
-      it("should have a configuration filled with defaults", function() {
+      it('should have a configuration filled with defaults', function() {
         controller('nx-calendar-days-controller', mock);
         scope.should.have.property('timeFormat');
         scope.should.have.property('weekFormat');
         scope.should.have.property('dayFormat');
         scope.should.have.property('hours');
         scope.should.have.property('days');
-        scope.should.have.property('events');
-      });
-
-      it("should have some methods", function() {
-        controller('nx-calendar-days-controller', mock);
-        console.log('directive-controllers.js: -> Test the impact of modifying the range of the controller');
       });
     });
 
-    describe("without configuration", function() {
+    describe('without configuration', function() {
 
-      it("should create the controller", function() {
+      it('should create the controller', function() {
         scope       = $rootScope.$new();
         mock        = { $scope: scope };
-        eventsource = provide('nxEventSource');
         controller('nx-calendar-days-controller', mock);
       });
 
-      it("should have a days.length of 1", function() {
+      it('should have a days.length of 1', function() {
         scope.days.should.have.length(1);
       });
 
-      it("should have 24 hours", function() {
+      it('should have 24 hours', function() {
         scope.hours.should.have.length(24);
-      });
-
-      it("should have no event", function() {
-        scope.events.should.have.length(0);
-      });
-
-      it("should add one event to the eventsource", function() {
-        eventsource.register(fixture.event('Summary of Event', moment()));
-      });
-
-      it("should have one event", function() {
-        scope.events.should.have.length(1);
       });
     });
 
-    describe("with configuration", function() {
-      it("should create the controller", function() {
+    describe('with configuration', function() {
+      it('should create the controller', function() {
         scope = $rootScope.$new();
         scope.config = {
           days: 3,
@@ -118,46 +97,74 @@ describe("Unit: Testing Directives Controllers", function() {
           source: 'important'
         };
         mock        = { $scope: scope };
-        eventsource = provide('nxEventSource');
         controller('nx-calendar-days-controller', mock);
       });
 
-      it("should have a days.length of 1", function() {
+      it('should have a days.length of 1', function() {
         scope.days.should.have.length(3);
       });
 
-      it("should start on the day after tomorrow", function() {
+      it('should start on the day after tomorrow', function() {
         scope.days[0].isSame(moment().add(2, 'days'), 'day').should.be.true;
         scope.days[1].isSame(moment().add(3, 'days'), 'day').should.be.true;
         scope.days[2].isSame(moment().add(4, 'days'), 'day').should.be.true;
       });
 
-      it("should have 11 hours", function() {
+      it('should have 11 hours', function() {
         scope.hours.should.have.length(18-7);
       });
+    });
+  });
 
-      it("should have no event", function() {
+  describe('nx-calendar-day-container-controller', function() {
+    var scope, mock, eventsource, day;
+
+    describe('basics', function() {
+      beforeEach(function() {
+        scope = $rootScope.$new();
+        mock  = { $scope: scope };
+      });
+
+      it('should have a configuration filled with defaults', function() {
+        controller('nx-calendar-day-container-controller', mock);
+        scope.should.have.property('start');
+        scope.should.have.property('end');
+        scope.should.have.property('events');
+      });
+    });
+
+    describe('events', function() {
+      it('should create the controller', function() {
+        scope       = $rootScope.$new();
+        mock        = { $scope: scope };
+        day         = moment().hour(15);
+        scope.day   = day.clone();
+        scope.source= 'important';
+        scope.start = 10;
+        scope.end   = 20;
+        eventsource = provide('nxEventSource');
+        controller('nx-calendar-day-container-controller', mock);
+      });
+
+      it('should have no event', function() {
         scope.events.should.have.length(0);
       });
 
-      it("should add one 'unimportant' event to the eventsource", function() {
-        eventsource.register(fixture.event('Summary of Event', scope.config.day), 'unimportant');
+      it('should add one \'unimportant\' event to the eventsource', function() {
+        eventsource.register(fixture.event('Summary of Event', day), 'unimportant');
       });
 
-      it("should have one event", function() {
+      it('should still have no event', function() {
         scope.events.should.have.length(0);
       });
 
-      it("should add one 'important' event to the eventsource", function() {
-        eventsource.register(fixture.event('Summary of Event', scope.config.day), 'important');
+      it('should add one \'important\' event to the eventsource', function() {
+        eventsource.register(fixture.event('Summary of Event', day), 'important');
       });
 
-      it("should have one event", function() {
+      it('should have one event', function() {
         scope.events.should.have.length(1);
       });
     });
   });
 });
-
-
-

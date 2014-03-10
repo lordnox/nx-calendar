@@ -42,7 +42,7 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
    *    @params event list of events to be filtered
    **/
   var createFilter = function(_filter) {
-    var range = provide('isRangeFilter')(_filter) && provide('nxRangeFilter')(_filter.start, _filter.end);
+    var range = provide('isRangeFilter')(_filter) && provide('nxRangeFilterFactory')(_filter.start, _filter.end);
 
     return function(namespace, events) {
       if(_filter.namespace && namespace !== _filter.namespace)

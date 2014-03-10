@@ -1,6 +1,6 @@
 var app = angular.module('nx-calendar');
 
-app.controller('nx-calendar-days-controller', function($scope, nxCalendarUtilities, nxEventSource) {
+app.controller('nx-calendar-days-controller', function($scope, nxCalendarUtilities) {
 
   var config = angular.extend({
     start       : 0 // first hour of the day
@@ -17,7 +17,6 @@ app.controller('nx-calendar-days-controller', function($scope, nxCalendarUtiliti
   $scope.timeFormat = config.timeFormat;
   $scope.dayFormat  = config.dayFormat;
   $scope.weekFormat = config.weekFormat;
-  $scope.events     = [];
 
   $scope.hours = nxCalendarUtilities.range(config.start, config.end, function(hour) {
     return moment().hour(hour).minute(0);
@@ -25,21 +24,6 @@ app.controller('nx-calendar-days-controller', function($scope, nxCalendarUtiliti
 
   $scope.days = nxCalendarUtilities.range(config.days).map(function(day) {
     return config.day.clone().add(day, 'day').startOf('day');
-  });
-
-  var filter = {
-    start : $scope.days[0],
-    end   : $scope.days[$scope.days.length - 1].clone().endOf('day')
-  };
-  if(config.source) filter.namespace = config.source;
-
-
-  nxEventSource.subscribe($scope, null, filter, function($evt, data) {
-    $scope.events = data.events;
-    console.log('nxEventSource - Events');
-    $scope.events.map(function(evt) {
-      console.log(nxEventSource.format(evt))
-    });
   });
 });
 
