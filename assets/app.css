@@ -19139,32 +19139,28 @@ table.table thead .sorting_desc_disabled {
   position: absolute;
   left: 0%;
   top: 0%;
-  height: 0%;
   width: 100%;
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-.nx-calendar tbody tr .nx-calendar-day-container .nx-calendar-event-container.hovered,
-.nx-calendar tbody tr .nx-calendar-day-container .nx-calendar-event-container:hover {
-  height: auto !important;
-  z-index: 9999;
-}
-.nx-calendar tbody tr .nx-calendar-day-container .nx-calendar-event-container.hovered .nx-calendar-event-content,
-.nx-calendar tbody tr .nx-calendar-day-container .nx-calendar-event-container:hover .nx-calendar-event-content {
-  height: auto !important;
-}
-.nx-calendar tbody tr .nx-calendar-day-container .nx-calendar-event-container .nx-calendar-event-content {
+  opacity: 0.7;
   background: #f00;
   text-align: left;
-  min-height: 100%;
-  height: 100%;
   word-wrap: break-word;
   font-weight: normal;
   border: 1px solid rgba(0,0,0,0.2);
   border-radius: 2px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.2);
   background-clip: padding-box;
+}
+.nx-calendar tbody tr .nx-calendar-day-container .nx-calendar-event-container.hovered,
+.nx-calendar tbody tr .nx-calendar-day-container .nx-calendar-event-container:hover {
+  z-index: 9999;
+  height: auto !important;
+  opacity: 1;
+}
+.nx-calendar tbody tr .nx-calendar-day-container .nx-calendar-event-container .nx-calendar-event-content {
+  height: 100%;
 }
 .nx-calendar tbody tr .nx-calendar-day-container .nx-calendar-event-container .nx-calendar-event-content .nx-calendar-event-header {
   font-size: 1.2em;

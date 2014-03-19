@@ -138,28 +138,36 @@ app.run(function(nxEventSource) {
     };
   };
 
+  var d = 2;
 
-  var e = mkevt('Long?!' , 3, 4, 2);
-  e.summary = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.';
+  var e = mkevt('Long?!', 4, 4, 2);
+  e.summary = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.';
 
   /* event source that contains custom events on the scope */
   data.events = [
     {title: 'All Day Event',start: new Date(y, m, 1)}
-  , {title: 'Long Event',start: new Date(y, m, d - 5),end: new Date(y, m, d - 2)}
-  , {id: 999,title: 'Repeating Event',start: new Date(y, m, d - 3, 16, 0),allDay: false}
-  , {id: 999,title: 'Repeating Event',start: new Date(y, m, d + 4, 16, 0),allDay: false}
-  , {title: 'Birthday Party',start: new Date(y, m, d + 1, 19, 0),end: new Date(y, m, d + 1, 22, 30),allDay: false}
-  , {title: 'Click for Google',start: new Date(y, m, 28),end: new Date(y, m, 29),url: 'http://google.com/'}
-  , mkevt('Monday'    , 1, 14, 4)
-  , mkevt('Tuesday'   , 2, 14, 2)
-  , mkevt('Wednesday' , 3, 14, 1)
-  , mkevt('Thursday'  , 4, 14, 2)
-  , mkevt('Friday'    , 5, 14, 4)
-  , mkevt('Saturday'  , 6, 14, 2)
-  , mkevt('Sunday'    , 7, 14, 1)
-  , mkevt('Friday 2'  , 5, 14, 10)
-  , e
+  // , {title: 'Long Event',start: new Date(y, m, d - 5),end: new Date(y, m, d - 2)}
+  // , {id: 999,title: 'Repeating Event',start: new Date(y, m, d - 3, 16, 0),allDay: false}
+  // , {id: 999,title: 'Repeating Event',start: new Date(y, m, d + 4, 16, 0),allDay: false}
+  // , {title: 'Birthday Party',start: new Date(y, m, d + 1, 19, 0),end: new Date(y, m, d + 1, 22, 30),allDay: false}
+  // , {title: 'Click for Google',start: new Date(y, m, 28),end: new Date(y, m, 29),url: 'http://google.com/'}
+  // , mkevt('Monday'    , 1, 14, 4)
+  // , mkevt('Tuesday'   , 2, 14, 2)
+  // , mkevt('Wednesday' , 3, 14, 1)
+  // , mkevt('Thursday'  , 4, 14, 2)
+   , mkevt('Friday'    , 5, 14, 4)
+  // , mkevt('Saturday'  , 6, 14, 2)
+  // , mkevt('Sunday'    , 7, 14, 1)
+  , mkevt('Friday 2'  , 5, 4, 25)
+  // , e
+  // , mkevt('demoday A', d, 6 , 2)
+  // , mkevt('demoday B', d, 10, 2)
+  // , mkevt('demoday C', d, 14, 4)
   ].map(function(item) {
+    if(!item.end) {
+      item.end = moment(item.start).endOf('day');
+      item.start = moment(item.start).startOf('day');
+    }
     return {
       start: moment(item.start),
       end: moment(item.end),
@@ -186,9 +194,18 @@ app.controller('demoCtrl', function($scope) {
     },
     day: {
       start: 7,
-      end: 22
+      end: 15
     }
   };
+
+  $scope.day = moment();
+
+  $scope.prev = function() { $scope.day.add(-1, 'days'); };
+  $scope.next = function() { $scope.day.add(+1, 'days'); };
+  $scope.lowerStart   = function() { $scope.config.day.start--; $scope.config.day.start = Math.max(0, $scope.config.day.start); };
+  $scope.higherStart  = function() { $scope.config.day.start++; $scope.config.day.start = Math.min(23, $scope.config.day.start); };
+  $scope.lowerEnd     = function() { $scope.config.day.end--; $scope.config.day.end = Math.max(1, $scope.config.day.end); };
+  $scope.higherEnd    = function() { $scope.config.day.end++; $scope.config.day.end = Math.min(24, $scope.config.day.end); };
 });;
 var views = ['day', 'month', 'events'];
 
@@ -239,6 +256,7 @@ app.controller('nx-calendar-day-container-controller', function($scope, nxCalend
   if($scope.source) filter.namespace = $scope.source;
 
   nxEventSource.subscribe($scope, null, filter, function($evt, data) {
+    console.log(data.events)
     $scope.events = data.events;
   });
 });
@@ -268,19 +286,73 @@ var directiveDefinition = function directiveDefinition() {
 
 ;var app = angular.module('nx-calendar');
 
-app.controller('nx-calendar-day-event-controller', function($scope) {
+app.controller('nx-calendar-day-event-controller', function($scope, $element, $rootScope) {
+    // Length of the visible day in minutes to calculate the percentage
   var minutes = ($scope.end - $scope.start) * 60
-    , day     = $scope.day.clone().hour($scope.start);
+    // current day (for multi-day events important) set with the starting hour
+    , day     = $scope.day.clone().hour($scope.start)
+    // difference of the current days start to the events start, might be negative
+    , top     = 100 * $scope.event.start.diff(day, 'minutes') / minutes
+    , left    =  10 * ($scope.event.slot - 1)
+    , height  = 100 * $scope.event.end.diff(day, 'minutes') / minutes
+    , width   = 100 - 10 * ($scope.event.slot - 1)
+  ;
 
-  $scope.position = {
-    top   : 100 * $scope.event.start.diff(day, 'minutes') / minutes
-  , left  :  10 * ($scope.event.slot - 1)
-  , height: 100 * $scope.event.end.diff($scope.event.start, 'minutes') / minutes
-  , width : 100 - 10 * ($scope.event.slot - 1)
+  console.log(day.format('DD.'), $scope.event.title, '->', $scope.event.slot);
+
+  /** Example: Day shows 7-15
+   *  Event A from 6-8
+   *  Event B from 10-12
+   *  Event C from 14-18
+   *    minutes = (15-7) * 60 = 480 (8 hours)
+   *    day     = 7:00
+   *      # for simplification we calculate in hours here,
+   *      # the formulas run with minute precision
+   *    A.top    = (6  - 7) / 8 * 100 = -12.5
+   *    B.top    = (10 - 7) / 8 * 100 =  37.5
+   *    C.top    = (14 - 7) / 8 * 100 =  87.5
+   *
+   *    A.height = (8  - 7) / 8 * 100 =  12.5
+   *    B.height = (12 - 7) / 8 * 100 =  62.5
+   *    C.height = (18 - 7) / 8 * 100 = 137.5
+  **/
+
+  // fix overflow and correct the height
+  top     = Math.max(0  , top);
+  height  = Math.min(100, height) - top;
+
+  /**
+   *    A.top    =   0.0
+   *    B.top    =  37.5
+   *    C.top    =  87.5
+   *
+   *    A.height =  12.5 -  0   = 12.5
+   *    B.height =  62.5 - 37.5 = 25.0
+   *    C.height = (100) - 87.5 = 12.5
+  **/
+
+  /**
+   *  12.5 is equivalent to 1 hour as 15-7 is 8 and 100/8 is 12.5
+   *  Which means that A will be shown as a 1 hour event,
+   *  B as a 2 hour event and C, like A, as a 1 hour event.
+  **/
+
+  // apply all this css to the element with ng-style
+  $scope.css = {
+    top       : top + '%'
+  , left      : left + '%'
+  , minHeight : height + '%'
+  , height    : height + '%'
+  , maxHeight : (100 - top) + '%'
+  , width     : width + '%'
   };
 
-  $scope.position.top     = Math.max(0  , $scope.position.top); // at least 0%
-  $scope.position.height  = Math.min(100, $scope.position.height);
+  // add eventhandlers to be applied when the user is hovering over one element.
+  // also call $apply on the rootScope to let multiday-events know something happend
+  // this "could" be performance heavy, as it will impact each scope on the page!
+  $element
+    .on('mouseenter', function() { $rootScope.$apply(function() { $scope.event.hovered = true; }); })
+    .on('mouseleave', function() { $rootScope.$apply(function() { $scope.event.hovered = false; }); });
 });
 
 var directiveDefinition = function directiveDefinition(directive) {
@@ -308,30 +380,75 @@ var directiveDefinition = function directiveDefinition(directive) {
 ;var app = angular.module('nx-calendar');
 
 app.controller('nx-calendar-days-controller', function($scope, nxCalendarUtilities) {
+  // update method to calculate the hours and days to view
+  var updated   = false
+    , defaults  = {
+        start       : 0 // first hour of the day
+      , end         : 24  // last hour of the day
+      , timeFormat  : 'HH:mm'
+      , dayFormat   : 'dddd'
+      , weekFormat  : 'wo'
+      , day         : moment() // can be set through scope.day or scope.config.day
+      , days        : 1
+      }
+    , config    = {}
+    , update    = function update() {
+      updated = true;
+      config = angular.extend(defaults, $scope.config || {});
+      // ensure we have an moment object
+      config.day = moment(config.day);
 
-  var config = angular.extend({
-    start       : 0 // first hour of the day
-  , end         : 24  // last hour of the day
-  , timeFormat  : 'HH:mm'
-  , dayFormat   : 'dddd'
-  , weekFormat  : 'wo'
-  , day         : moment()
-  , days        : 1
-  }, $scope.config || {});
+      // read all properties from the config
+      $scope.start      = config.start;
+      $scope.end        = config.end;
+      $scope.timeFormat = config.timeFormat;
+      $scope.dayFormat  = config.dayFormat;
+      $scope.weekFormat = config.weekFormat;
 
-  config.day = moment(config.day);
+      $scope.hours = nxCalendarUtilities.range(config.start, config.end, function(hour) {
+        return moment().hour(hour).minute(0);
+      });
 
-  $scope.timeFormat = config.timeFormat;
-  $scope.dayFormat  = config.dayFormat;
-  $scope.weekFormat = config.weekFormat;
+      $scope.days = nxCalendarUtilities.range(config.days).map(function(day) {
+        return config.day.clone().add(day, 'day').startOf('day');
+      });
+    }
+  ;
 
-  $scope.hours = nxCalendarUtilities.range(config.start, config.end, function(hour) {
-    return moment().hour(hour).minute(0);
+  // day-watch to read out a possible day-config through the scope
+  $scope.$watch(function() {
+    return moment.isMoment($scope.day) && $scope.day.format(config.dayFormat || defaults.dayFormat);
+  }, function() {
+    if(!moment.isMoment($scope.day)) return;
+    console.log('CHANGE!', $scope.day.format(config.dayFormat || defaults.dayFormat));
+    config.day = moment($scope.day);
+    update();
   });
 
-  $scope.days = nxCalendarUtilities.range(config.days).map(function(day) {
-    return config.day.clone().add(day, 'day').startOf('day');
-  });
+  $scope.$watch(function() {
+    var result = $scope.config   && (
+       ($scope.config.hasOwnProperty('start')       && $scope.config.start      !== config.start)
+    || ($scope.config.hasOwnProperty('end')         && $scope.config.end        !== config.end)
+    || ($scope.config.hasOwnProperty('timeFormat')  && $scope.config.timeFormat !== config.timeFormat)
+    || ($scope.config.hasOwnProperty('dayFormat')   && $scope.config.dayFormat  !== config.dayFormat)
+    || ($scope.config.hasOwnProperty('weekFormat')  && $scope.config.weekFormat !== config.weekFormat)
+    || (  // config.day is a special case, like $scope.day
+          $scope.config.hasOwnProperty('day')
+      &&  moment.isMoment($scope.config.day)
+      &&  $scope.config.day.format(config.dayFormat || defaults.dayFormat) !== config.day.format(config.dayFormat || defaults.dayFormat)
+      )
+    );
+    //console.log('start'      , $scope.config.start      , $scope.config.start      !== config.start);
+    //console.log('end'        , $scope.config.end        , $scope.config.end        !== config.end);
+    //console.log('timeFormat' , $scope.config.timeFormat , $scope.config.timeFormat !== config.timeFormat);
+    //console.log('dayFormat'  , $scope.config.dayFormat  , $scope.config.dayFormat  !== config.dayFormat);
+    //console.log('weekFormat' , $scope.config.weekFormat , $scope.config.weekFormat !== config.weekFormat);
+    console.log(result, $scope.config);
+    return result;
+  }, update);
+
+  // run the update as initialization if it did not run through $watch
+  if(!updated) update();
 });
 
 
@@ -342,6 +459,7 @@ var directiveDefinition = function directiveDefinition() {
     return {
       scope: {
         config: '=nxCalConfig'
+      , day:    '='
       },
       controller: 'nx-calendar-days-controller',
       templateUrl: template('calendarDays')
