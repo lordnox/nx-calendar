@@ -27,12 +27,14 @@ var directiveDefinition = function directiveDefinition() {
             if(!iAttrs.hasOwnProperty(key))
               delete css[key];
           });
-          console.log(css);
+
           iElement.css(css);
         };
 
         $scope.$watch('posx', refresh);
         $scope.$watch('posy', refresh);
+        $scope.$watch('height', refresh);
+        $scope.$watch('width', refresh);
       }
     };
   };

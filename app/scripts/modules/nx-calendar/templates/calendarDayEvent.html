@@ -1,4 +1,4 @@
-<div nx-position="%" left="position.left" top="position.top" width="position.width" height="position.height" name="nx-calendar-event-id-{{event.id}}" class="nx-calendar-event-container">
+<div ng-style="css" ng-class="{ hovered: event.hovered }" name="nx-calendar-event-id-{{event.id}}" class="nx-calendar-event-container">
   <div class="nx-calendar-event-content color-{{event.colorId}}">
     <div class="nx-calendar-event-header">{{event.title}}</div>
     <div class="nx-calendar-event-body">{{event.summary}}</div>

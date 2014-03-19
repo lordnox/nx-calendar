@@ -283,6 +283,54 @@ describe('Unit: Testing Controllers', function() {
           assertCounters({ filtered: 1, unfiltered: 3});
         });
       });
+
+      describe('bugfixes', function() {
+        var mkEvt
+          , day = moment()
+        ;
+
+        beforeEach(function() {
+          mkEvt = function(t, h, l) {
+            return {
+              summary : t
+            , start   : day.clone().hour(h).minute(0)
+            , end     : day.clone().hour(h+l).minute(0)
+            };
+          };
+        });
+
+        xit('bug () slotting', function() {
+          // 2 Events on Friday, one multiday event turning over to saturday and one event on friday itself both had slot 1, expected slot 1 & 2
+          var evts = [
+            mkEvt('A', 14, 4)
+          , mkEvt('B', 4, 25)
+          ], called = false;
+
+          provider.register(evts);
+
+          provider.subscribe(scope, null, {
+            start : day.clone().startOf('day')
+          , end   : day.clone().endOf('day')
+          }, function($evt, data) {
+            called = true;
+            data.events.should.have.length(2);
+            var A = data.events[0]
+              , B = data.events[1]
+            ;
+            A.summary.should.be.equal('A');
+            B.summary.should.be.equal('B');
+            A.should.have.property('slot');
+            B.should.have.property('slot');
+            console.log(A.start.format('HH:mm') + ' - ' +  A.end.format('HH:mm') + ' --- > ' + A.slot);
+            console.log(B.start.format('HH:mm') + ' - ' +  B.end.format('HH:mm') + ' --- > ' + B.slot);
+            A.slot.should.be.equal(2);
+            B.slot.should.be.equal(1);
+
+          });
+
+          called.should.be.ok;
+        });
+      });
     });
   });
 });

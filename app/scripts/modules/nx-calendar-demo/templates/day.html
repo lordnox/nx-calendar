@@ -3,9 +3,24 @@
     <div class="row">
       <div class="col-sm-offset-1 col-sm-10">
         <section class="widget">
-          <h2><strong>nx-calendar</strong> - Day</h2>
+          <h2>
+            <strong>nx-calendar</strong> - Day [{{day.format('DD.MM.YYYY')}}]
+            <div class="controls pull-right container">
+              <div class="btn-group-vertical btn-group-xs">
+                <a class="btn" ng-click="lowerStart()">-</a>
+                <a class="btn" ng-click="higherStart()">+</a>
+              </div>
+              <div class="btn-group-vertical btn-group-xs">
+                <a class="btn" ng-click="lowerEnd()">-</a>
+                <a class="btn" ng-click="higherEnd()">+</a>
+              </div>
 
-          <div nx-cal-days nx-cal-config="config.day"/>
+              <a class="btn" ng-click="prev()">&lt;</a>
+              <a class="btn" ng-click="next()">&gt;</a>
+            </div>
+          </h2>
+
+          <div nx-cal-days day="day" nx-cal-config="config.day"/>
 
         </section>
       </div>

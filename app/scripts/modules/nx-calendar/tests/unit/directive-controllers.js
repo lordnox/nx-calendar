@@ -66,6 +66,99 @@ describe('Unit: Testing Directives Controllers', function() {
         scope.should.have.property('dayFormat');
         scope.should.have.property('hours');
         scope.should.have.property('days');
+        scope.should.have.property('start');
+        scope.should.have.property('end');
+      });
+
+      describe('chain', function() {
+        var ctrl, scope, mock, day;
+
+        it('should initialize', function() {
+          scope = $rootScope.$new();
+          mock  = { $scope: scope };
+          ctrl  = controller('nx-calendar-days-controller', mock);
+        });
+
+        it('should have a timeFormat of "HH:mm"', function() {
+          scope.timeFormat.should.be.equal('HH:mm');
+        });
+
+        it('should have a weekFormat of "wo"', function() {
+          scope.weekFormat.should.be.equal('wo');
+        });
+
+        it('should have a dayFormat of "dddd"', function() {
+          scope.dayFormat.should.be.equal('dddd');
+        });
+
+        it('should have a hours array with 24 elements', function() {
+          scope.hours.should.have.length(24);
+        });
+
+        it('should have a day array with 1 element', function() {
+          scope.days.should.have.length(1);
+        });
+
+        it('should have a start of 0', function() {
+          scope.start.should.be.equal(0);
+        });
+
+        it('should have a end of 24', function() {
+          scope.end.should.be.equal(24);
+        });
+
+        it('should have the first day set to the current moment-day', function() {
+          scope.days[0].format('DD.MM.YYYY').should.be.equal(moment().format('DD.MM.YYYY'));
+        });
+
+        it('should react to a change in scope.day', function() {
+          day = moment().add(+1, 'day');
+          scope.day = day;
+          scope.$digest();
+        });
+
+        it('should still have a days length of 1', function() {
+          scope.days.should.have.length(1);
+        });
+
+        it('should have the first day set to tomorrow', function() {
+          scope.days[0].format('DD.MM.YYYY').should.be.equal(day.format('DD.MM.YYYY'));
+        });
+
+        it('should react to changes in scope.config', function() {
+          scope.config = {
+            timeFormat: 'a'
+          , weekFormat: 'b'
+          , dayFormat : 'c'
+          , start     : 10
+          , end       : 15
+          };
+          scope.$digest();
+        });
+
+        it('should have set scope.timeFormat to "a"', function() {
+          scope.timeFormat.should.be.equal('a');
+        });
+
+        it('should have set scope.weekFormat to "b"', function() {
+          scope.weekFormat.should.be.equal('b');
+        });
+
+        it('should have set scope.dayFormat to "c"', function() {
+          scope.dayFormat.should.be.equal('c');
+        });
+
+        it('should have set the scope.start to 10', function() {
+          scope.start.should.be.equal(10);
+        });
+
+        it('should have set the scope.end to 15', function() {
+          scope.end.should.be.equal(15);
+        });
+
+        it('should have changed the hours array to length 5', function() {
+          scope.hours.should.have.length(5);
+        });
       });
     });
 
@@ -130,6 +223,7 @@ describe('Unit: Testing Directives Controllers', function() {
         scope.should.have.property('start');
         scope.should.have.property('end');
         scope.should.have.property('events');
+        scope.should.have.property('day');
       });
     });
 

@@ -14,6 +14,7 @@ app.controller('nx-calendar-day-container-controller', function($scope, nxCalend
   if($scope.source) filter.namespace = $scope.source;
 
   nxEventSource.subscribe($scope, null, filter, function($evt, data) {
+    console.log(data.events);
     $scope.events = data.events;
   });
 });
