@@ -256,7 +256,7 @@ app.controller('nx-calendar-day-container-controller', function($scope, nxCalend
   if($scope.source) filter.namespace = $scope.source;
 
   nxEventSource.subscribe($scope, null, filter, function($evt, data) {
-    console.log(data.events)
+    console.log(data.events);
     $scope.events = data.events;
   });
 });
@@ -393,10 +393,11 @@ app.controller('nx-calendar-days-controller', function($scope, nxCalendarUtiliti
       }
     , config    = {}
     , update    = function update() {
-      updated = true;
-      config = angular.extend(defaults, $scope.config || {});
+
+      updated     = true;
+      config      = angular.extend(defaults, $scope.config || {});
       // ensure we have an moment object
-      config.day = moment(config.day);
+      config.day  = moment(config.day);
 
       // read all properties from the config
       $scope.start      = config.start;
@@ -405,10 +406,12 @@ app.controller('nx-calendar-days-controller', function($scope, nxCalendarUtiliti
       $scope.dayFormat  = config.dayFormat;
       $scope.weekFormat = config.weekFormat;
 
+      // build up the hours array for the ng-repeat
       $scope.hours = nxCalendarUtilities.range(config.start, config.end, function(hour) {
         return moment().hour(hour).minute(0);
       });
 
+      // build up the days that are shown
       $scope.days = nxCalendarUtilities.range(config.days).map(function(day) {
         return config.day.clone().add(day, 'day').startOf('day');
       });
@@ -417,40 +420,33 @@ app.controller('nx-calendar-days-controller', function($scope, nxCalendarUtiliti
 
   // day-watch to read out a possible day-config through the scope
   $scope.$watch(function() {
-    return moment.isMoment($scope.day) && $scope.day.format(config.dayFormat || defaults.dayFormat);
+    // check for a moment object and compare the formats
+    return moment.isMoment($scope.day)
+        && $scope.day.format(config.dayFormat || defaults.dayFormat);
   }, function() {
     if(!moment.isMoment($scope.day)) return;
-    console.log('CHANGE!', $scope.day.format(config.dayFormat || defaults.dayFormat));
     config.day = moment($scope.day);
     update();
   });
 
   $scope.$watch(function() {
-    var result = $scope.config   && (
+    return $scope.config && (
        ($scope.config.hasOwnProperty('start')       && $scope.config.start      !== config.start)
     || ($scope.config.hasOwnProperty('end')         && $scope.config.end        !== config.end)
     || ($scope.config.hasOwnProperty('timeFormat')  && $scope.config.timeFormat !== config.timeFormat)
     || ($scope.config.hasOwnProperty('dayFormat')   && $scope.config.dayFormat  !== config.dayFormat)
     || ($scope.config.hasOwnProperty('weekFormat')  && $scope.config.weekFormat !== config.weekFormat)
-    || (  // config.day is a special case, like $scope.day
+    || (// config.day is a special case, like $scope.day
           $scope.config.hasOwnProperty('day')
       &&  moment.isMoment($scope.config.day)
       &&  $scope.config.day.format(config.dayFormat || defaults.dayFormat) !== config.day.format(config.dayFormat || defaults.dayFormat)
       )
     );
-    //console.log('start'      , $scope.config.start      , $scope.config.start      !== config.start);
-    //console.log('end'        , $scope.config.end        , $scope.config.end        !== config.end);
-    //console.log('timeFormat' , $scope.config.timeFormat , $scope.config.timeFormat !== config.timeFormat);
-    //console.log('dayFormat'  , $scope.config.dayFormat  , $scope.config.dayFormat  !== config.dayFormat);
-    //console.log('weekFormat' , $scope.config.weekFormat , $scope.config.weekFormat !== config.weekFormat);
-    console.log(result, $scope.config);
-    return result;
   }, update);
 
   // run the update as initialization if it did not run through $watch
   if(!updated) update();
 });
-
 
 var directiveDefinition = function directiveDefinition() {
   return function(nxCalendarConfiguration) {
