@@ -7,14 +7,24 @@ app.controller('nx-calendar-day-container-controller', function($scope, nxCalend
   $scope.start      = +($scope.start || 0);
   $scope.end        = +($scope.end || 24);
 
-  var filter = {
-    start : $scope.day.clone().startOf('day'),
-    end   : $scope.day.clone().endOf('day')
-  };
-  if($scope.source) filter.namespace = $scope.source;
+  // create a clone for dirty checking
+  var day     = $scope.day.clone()
+    , filter = {}
+    , update  = function() {
+      filter.start = day.clone().startOf('day');
+      filter.end   = day.clone().endOf('day');
+
+      if($scope.source) {
+        filter.namespace = $scope.source;
+      } else {
+        delete filter.namespace;
+      }
+    }
+  ;
+
+  update();
 
   nxEventSource.subscribe($scope, null, filter, function($evt, data) {
-    console.log(data.events);
     $scope.events = data.events;
   });
 });

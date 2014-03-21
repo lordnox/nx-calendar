@@ -25,6 +25,10 @@
       ],
       "post": [
         "test/templates/templates.js"
+      ],
+      "coverage": [
+        "app/scripts/modules/nx-calendar/**/*.js",
+        "!**/test/**"
       ]
     },
 

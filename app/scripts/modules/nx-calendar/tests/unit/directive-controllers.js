@@ -122,7 +122,7 @@ describe('Unit: Testing Directives Controllers', function() {
         });
 
         it('should have the first day set to tomorrow', function() {
-          scope.days[0].format('DD.MM.YYYY').should.be.equal(day.format('DD.MM.YYYY'));
+          scope.days[0].isSame(day, 'day');
         });
 
         it('should react to changes in scope.config', function() {

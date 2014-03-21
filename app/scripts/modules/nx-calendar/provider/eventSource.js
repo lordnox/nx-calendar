@@ -9,10 +9,11 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
    **/
     config: {
       events: {
-        add   : 'nx-event-source-add',
-        remove: 'nx-event-source-remove',
-        update: 'nx-event-source-update'
+        add   : 'nx-event-source-add'
+      , remove: 'nx-event-source-remove'
+      , update: 'nx-event-source-update'
       }
+    , namespace: 0
     }
   };
 
@@ -122,7 +123,7 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
       if(typeof namespace !== 'string') {
         var tmp = source;
         source    = namespace;
-        namespace = tmp || 0;
+        namespace = tmp || self.config.namespace;
       }
 
       if(!angular.isArray(source))
@@ -152,7 +153,7 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
         filter  = {};
       }
       event = event || self.config.events.update;
-      var handle = self.handler(scope, event, filter || {});
+      var handle = self.handler(scope, event, filter);
       if(angular.isFunction(fn)) {
         scope.$on(event, fn);
       }
@@ -171,9 +172,9 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
       if(moment.isMoment(namespace)) {
         end = start;
         start = namespace;
-        namespace = 0;
+        namespace = self.config.namespace;
       } else {
-        namespace = namespace || 0;
+        namespace = namespace || self.config.namespace;
       }
 
       var filter = {};
