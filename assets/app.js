@@ -249,14 +249,24 @@ app.controller('nx-calendar-day-container-controller', function($scope, nxCalend
   $scope.start      = +($scope.start || 0);
   $scope.end        = +($scope.end || 24);
 
-  var filter = {
-    start : $scope.day.clone().startOf('day'),
-    end   : $scope.day.clone().endOf('day')
-  };
-  if($scope.source) filter.namespace = $scope.source;
+  // create a clone for dirty checking
+  var day     = $scope.day.clone()
+    , filter = {}
+    , update  = function() {
+      filter.start = day.clone().startOf('day');
+      filter.end   = day.clone().endOf('day');
+
+      if($scope.source) {
+        filter.namespace = $scope.source;
+      } else {
+        delete filter.namespace;
+      }
+    }
+  ;
+
+  update();
 
   nxEventSource.subscribe($scope, null, filter, function($evt, data) {
-    console.log(data.events);
     $scope.events = data.events;
   });
 });
@@ -396,8 +406,8 @@ app.controller('nx-calendar-days-controller', function($scope, nxCalendarUtiliti
 
       updated     = true;
       config      = angular.extend(defaults, $scope.config || {});
-      // ensure we have an moment object
-      config.day  = moment(config.day);
+      // create a clone for the dirty checking
+      config.day  = moment(config.day).clone();
 
       // read all properties from the config
       $scope.start      = config.start;
@@ -422,7 +432,7 @@ app.controller('nx-calendar-days-controller', function($scope, nxCalendarUtiliti
   $scope.$watch(function() {
     // check for a moment object and compare the formats
     return moment.isMoment($scope.day)
-        && $scope.day.format(config.dayFormat || defaults.dayFormat);
+        && $scope.day.isSame(config.day, 'day');
   }, function() {
     if(!moment.isMoment($scope.day)) return;
     config.day = moment($scope.day);
@@ -436,10 +446,9 @@ app.controller('nx-calendar-days-controller', function($scope, nxCalendarUtiliti
     || ($scope.config.hasOwnProperty('timeFormat')  && $scope.config.timeFormat !== config.timeFormat)
     || ($scope.config.hasOwnProperty('dayFormat')   && $scope.config.dayFormat  !== config.dayFormat)
     || ($scope.config.hasOwnProperty('weekFormat')  && $scope.config.weekFormat !== config.weekFormat)
-    || (// config.day is a special case, like $scope.day
-          $scope.config.hasOwnProperty('day')
-      &&  moment.isMoment($scope.config.day)
-      &&  $scope.config.day.format(config.dayFormat || defaults.dayFormat) !== config.day.format(config.dayFormat || defaults.dayFormat)
+    ||(  $scope.config.hasOwnProperty('day')
+      && moment.isMoment($scope.config.day)
+      && config.day.isSame($scope.config.day)
       )
     );
   }, update);
@@ -710,10 +719,11 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
    **/
     config: {
       events: {
-        add   : 'nx-event-source-add',
-        remove: 'nx-event-source-remove',
-        update: 'nx-event-source-update'
+        add   : 'nx-event-source-add'
+      , remove: 'nx-event-source-remove'
+      , update: 'nx-event-source-update'
       }
+    , namespace: 0
     }
   };
 
@@ -823,7 +833,7 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
       if(typeof namespace !== 'string') {
         var tmp = source;
         source    = namespace;
-        namespace = tmp || 0;
+        namespace = tmp || self.config.namespace;
       }
 
       if(!angular.isArray(source))
@@ -853,7 +863,7 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
         filter  = {};
       }
       event = event || self.config.events.update;
-      var handle = self.handler(scope, event, filter || {});
+      var handle = self.handler(scope, event, filter);
       if(angular.isFunction(fn)) {
         scope.$on(event, fn);
       }
@@ -872,9 +882,9 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
       if(moment.isMoment(namespace)) {
         end = start;
         start = namespace;
-        namespace = 0;
+        namespace = self.config.namespace;
       } else {
-        namespace = namespace || 0;
+        namespace = namespace || self.config.namespace;
       }
 
       var filter = {};
