@@ -25,6 +25,9 @@ app.controller('nx-calendar-day-container-controller', function($scope, nxCalend
   update();
 
   nxEventSource.subscribe($scope, null, filter, function($evt, data) {
+    data.events.map(function(evt) {
+      console.log(evt.slot);
+    });
     $scope.events = data.events;
   });
 });

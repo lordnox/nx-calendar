@@ -5,11 +5,12 @@ var data = {};
 
 app.run(function(nxEventSource) {
   var date = new Date();
-  var cid = 10;
-  var d = date.getDate();
-  var m = date.getMonth();
-  var y = date.getFullYear();
-  var day = moment(new Date);
+  var cid  = 10;
+  var d    = date.getDate();
+  var m    = date.getMonth();
+  var y    = date.getFullYear();
+  var day  = moment(new Date);
+  var f    = "Do dddd";
 
   /* event source that pulls from google.com */
   data.eventSource = {
@@ -19,12 +20,15 @@ app.run(function(nxEventSource) {
   };
 
   var mkevt = function(t, d, h, l, m) {
-    //console.log("day: ", d, h, l, m);
+    var start = day.clone().day(d).hour(h).minute(m||0);
+    var end   = day.clone().day(d).hour(h+l).minute(m||0);
+    console.log("day: ", d, h, l, m);
+    console.log(start.format(f), end.format(f));
     return {
       id    : cid++
     , title : t
-    , start : day.clone().day(d).hour(h).minute(m||0)
-    , end   : day.clone().day(d).hour(h+l).minute(m||0)
+    , start : start
+    , end   : end
     };
   };
 
@@ -45,7 +49,7 @@ app.run(function(nxEventSource) {
   // , mkevt('Tuesday'   , 2, 14, 2)
   // , mkevt('Wednesday' , 3, 14, 1)
   // , mkevt('Thursday'  , 4, 14, 2)
-   , mkevt('Friday'    , 5, 14, 4)
+  , mkevt('Friday'    , 5, 14, 4)
   // , mkevt('Saturday'  , 6, 14, 2)
   // , mkevt('Sunday'    , 7, 14, 1)
   , mkevt('Friday 2'  , 5, 4, 25)
@@ -55,15 +59,15 @@ app.run(function(nxEventSource) {
   // , mkevt('demoday C', d, 14, 4)
   ].map(function(item) {
     if(!item.end) {
-      item.end = moment(item.start).endOf('day');
+      item.end   = moment(item.start).endOf('day');
       item.start = moment(item.start).startOf('day');
     }
     return {
-      start: moment(item.start),
-      end: moment(item.end),
-      title: item.title,
-      id: item.id || (item.id = cid++),
-      summary: item.summary || (item.id + ' ---- ' + item.title)
+      start   : moment(item.start),
+      end     : moment(item.end),
+      title   : item.title,
+      id      : item.id || (item.id = cid++),
+      summary : item.summary || (item.id + ' ---- ' + item.title)
     };
   });
 
@@ -79,6 +83,8 @@ app.controller('demoCtrl', function($scope) {
   $scope.config = {
     week: {
       dayFormat: 'Do dddd',
+      start: 7,
+      end: 22,
       days: 7,
       day: moment().add(-1, 'days').day(1)
     },
@@ -88,7 +94,11 @@ app.controller('demoCtrl', function($scope) {
     }
   };
 
-  $scope.day = moment();
+  $scope.config.weekExtra = angular.copy($scope.config.week);
+  $scope.config.weekExtra.days = 1;
+  $scope.config.weekExtra.day.day(5);
+
+  $scope.day = moment();//.day(5);
 
   $scope.prev = function() { $scope.day.add(-1, 'days'); };
   $scope.next = function() { $scope.day.add(+1, 'days'); };

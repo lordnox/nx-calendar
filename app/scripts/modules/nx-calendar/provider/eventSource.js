@@ -80,10 +80,10 @@ angular.module('nx-calendar').provider('nxEventSource', function() {
     var handle = function handle(type, events, namespace) {
       var publish = filterFn(namespace, events).map(slotify);
       // console.log(scope.$id, event, publish.length);
-      // publish.map(function(evt) {
-      //   console.log(evt.slot, evt.summary);
-      //   console.log(evt.start.format('HH:mm') + ' > ' + evt.end.format('HH:mm'));
-      // });
+      publish.map(function(evt) {
+        console.log(evt.slot, evt.summary);
+        console.log(evt.start.format('HH:mm') + ' > ' + evt.end.format('HH:mm'));
+      });
       broadcast(scope, type, publish, event);
     };
     // return remove-fn

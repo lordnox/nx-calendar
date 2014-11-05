@@ -34,6 +34,11 @@ var app = angular.module('nx-calendar-demo', [
         templateUrl: template('week'),
         controller: 'demoCtrl'
       })
+      .state('calendar.weekExtra', {
+        url: '/weekExtra',
+        templateUrl: template('weekExtra'),
+        controller: 'demoCtrl'
+      })
       .state('calendar.day', {
         url: '/day',
         templateUrl: template('day'),

@@ -49,7 +49,7 @@ describe('Unit: Testing Filters', function() {
     });
   });
 
-  describe('nxSlotFactory', function() {
+  ddescribe('nxSlotFactory', function() {
     var provider, day, sod, eod;
 
     var mkEvt = function(hour, duration, id) {
@@ -172,6 +172,32 @@ describe('Unit: Testing Filters', function() {
           , '2-2'
           , '3-1'
           ]);
+        });
+
+        iit("should slot 2 dates on friday correctly", function() {
+          var day  = moment(new Date);
+          var f    = "Do dddd";
+          var cid  = 10;
+          var mkevt = function(t, d, h, l, m) {
+            var start = day.clone().day(d).hour(h).minute(m||0);
+            var end   = day.clone().day(d).hour(h+l).minute(m||0);
+            console.log("day: ", d, h, l, m);
+            console.log(start.format(f), end.format(f));
+            return {
+              id    : cid++
+            , title : t
+            , start : start
+            , end   : end
+            };
+          };
+
+          var f1 = mkevt('Friday'    , 5, 14, 4)
+            , f2 = mkevt('Friday 2'  , 5, 4, 25)
+          ;
+
+          provider.slot('slot', [f1, f2]);
+
+          console.log(f1.slot, f2.slot)
         });
       });
     });
